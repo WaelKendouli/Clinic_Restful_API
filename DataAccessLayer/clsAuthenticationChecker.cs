@@ -36,6 +36,31 @@ namespace DataAccessLayer
                 }
             }
         }
+        public static bool SecondaryAuthentication(string phone, string email)
+        {
+            using (SqlConnection conx = new SqlConnection(clsConnection.ConnectionString))
+            using (SqlCommand cmd = new SqlCommand("SP_SecondaryAuthentication", conx))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Phone", phone);
+                cmd.Parameters.AddWithValue("@Email", email);
+
+                try
+                {
+                    conx.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        // If any row is returned, the credentials are valid
+                        return reader.HasRows;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Handle exception (log it, etc.)
+                    return false;
+                }
+            }
+        }
 
     }
 }
