@@ -8,6 +8,6 @@ namespace DataAccessLayer
 {
     public class clsConnection
     {
-        public static string ConnectionString = "Server=.;Database=ClinicDB;Integrated Security=True;";
+        public static string ConnectionString = "Server=.;Database=ClinicDB;Integrated Security=True;TrustServerCertificate=True;";
     }
 }

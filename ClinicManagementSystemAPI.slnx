@@ -1,3 +1,5 @@
 <Solution>
+  <Project Path="ClinicLogicLayer/ClinicLogicLayer.csproj" Id="2d3cf857-843e-42a0-adbf-ae07780096dc" />
   <Project Path="ClinicManagementSystemAPI/ClinicManagementSystemAPI.csproj" />
+  <Project Path="DataAccessLayer/DataAccessLayer.csproj" Id="708496d7-af7b-4438-8893-a11278a84f29" />
 </Solution>
