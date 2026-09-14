@@ -43,7 +43,7 @@ namespace ClinicLogicLayer
 
         private bool SecondaryAuthentication()
         {
-            if (!string.IsNullOrEmpty(this.Email)|| !string.IsNullOrEmpty(this.Phone))
+            if (string.IsNullOrEmpty(this.Email)|| string.IsNullOrEmpty(this.Phone))
             {
                 throw new Exception("invalid inputs");
             }
