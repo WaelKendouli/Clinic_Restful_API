@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ClinicLogicLayer;
+using DTOsLayer;
 namespace ClinicManagementSystemAPI.Controllers
 {
     [Route("api/[controller]")]
@@ -8,11 +9,11 @@ namespace ClinicManagementSystemAPI.Controllers
     public class ClinicController : ControllerBase
     {
         [HttpPost ("auth" ,Name = "AuthenticateUser")]
-        public IActionResult AuthenticateUser(string username, string password, string phone = "", string email = "")
+        public IActionResult AuthenticateUser([FromBody] LoginDTO DTO)
         { 
             try
             {
-                LoggingAuthenticator authenticator = new LoggingAuthenticator(username, password, phone, email);
+                LoggingAuthenticator authenticator = new LoggingAuthenticator(DTO.Username, DTO.Password, DTO.Phone, DTO.Email);
                 bool isAuthenticated = authenticator.Authenticate();
                 if (isAuthenticated)
                 {
@@ -29,11 +30,11 @@ namespace ClinicManagementSystemAPI.Controllers
             }
         }
         [HttpPost("Sec-auth" ,Name = "AuthenticateUserWithSecondaryMethod")]
-        public IActionResult AuthenticateUserSecondaryMethod( string phone , string email )
+        public IActionResult AuthenticateUserSecondaryMethod([FromBody] LoginDTO DTO)
         {
             try
             {
-                LoggingAuthenticator authenticator = new LoggingAuthenticator("", "", phone, email);
+                LoggingAuthenticator authenticator = new LoggingAuthenticator(DTO.Username, DTO.Password, DTO.Phone, DTO.Email);
                 authenticator.SwitchToSecondaryAuthenticationMethod();
                 bool isAuthenticated = authenticator.Authenticate();
                 if (isAuthenticated)
