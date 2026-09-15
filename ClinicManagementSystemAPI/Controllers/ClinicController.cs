@@ -7,7 +7,7 @@ namespace ClinicManagementSystemAPI.Controllers
     [ApiController]
     public class ClinicController : ControllerBase
     {
-        [HttpGet ("auth" ,Name = "AuthenticateUser")]
+        [HttpPost ("auth" ,Name = "AuthenticateUser")]
         public IActionResult AuthenticateUser(string username, string password, string phone = "", string email = "")
         { 
             try
@@ -28,7 +28,7 @@ namespace ClinicManagementSystemAPI.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
-        [HttpGet("Sec-auth" ,Name = "AuthenticateUserWithSecondaryMethod")]
+        [HttpPost("Sec-auth" ,Name = "AuthenticateUserWithSecondaryMethod")]
         public IActionResult AuthenticateUserSecondaryMethod( string phone , string email )
         {
             try
