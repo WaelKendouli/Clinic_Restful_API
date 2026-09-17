@@ -4,7 +4,7 @@ using DTOsLayer;
 using ClinicLogicLayer;
 namespace ClinicManagementSystemAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/Doctors")]
     [ApiController]
     public class DoctorsController : ControllerBase
     {
@@ -19,6 +19,17 @@ namespace ClinicManagementSystemAPI.Controllers
                 return BadRequest("New Doctor was not added");
             }
             return Ok(DTO);
+        }
+
+        [HttpGet("GetSpecializations", Name = "GetSpecializations")]
+        public async Task<IActionResult> GetSepcializations()
+        {
+            Dictionary<string, int> specializations = await clsDoctor.GetSpecializations();
+            if (specializations == null)
+            {
+                return BadRequest("Bad request from the client side");
+            }
+            return Ok(specializations);
         }
     }
 }

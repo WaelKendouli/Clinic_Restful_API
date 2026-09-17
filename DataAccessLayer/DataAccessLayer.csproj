@@ -153,6 +153,7 @@
     <Compile Include="Class1.cs" />
     <Compile Include="clsAuthenticationChecker.cs" />
     <Compile Include="clsConnection.cs" />
+    <Compile Include="clsDoctorsDA.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

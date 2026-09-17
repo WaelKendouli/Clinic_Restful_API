@@ -60,6 +60,10 @@ namespace ClinicLogicLayer
             return await clsDoctorsDA.AddNewDoctorAsync(FirstName, LastName, DateOfBirth, Phone, Email, Address, Gender, PhotoURL, SpecializationID);
         }
 
+        public static async Task<Dictionary<string, int>> GetSpecializations()
+        {
+            return await clsDoctorsDA.GetSpecialazationsAsync();
+        }
         public async Task<bool> Save()
         {
             switch(mode)

@@ -93,5 +93,39 @@ namespace DataAccessLayer
                 }
             }
         }
+
+        public static async Task<Dictionary<string, int>> GetSpecialazationsAsync()
+        {
+            Dictionary<string, int> DicSpecializations = new Dictionary<string, int>();
+            using (SqlConnection conx = new SqlConnection(clsConnection.ConnectionString))
+            using (SqlCommand cmd = new SqlCommand("SP_GetSpecialazations", conx))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                try
+                {
+                    await conx.OpenAsync();
+                    using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            string specializationName = reader.GetString(reader.GetOrdinal("Specialization"));
+                            int specializationID = reader.GetInt32(reader.GetOrdinal("SpecialazationID"));
+
+                            if (!DicSpecializations.ContainsKey(specializationName))
+                            {
+                                DicSpecializations.Add(specializationName, specializationID);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Handle exception (log it, etc.)
+                    return null;
+                }
+            }
+            return DicSpecializations;
+        }
     }
 }
