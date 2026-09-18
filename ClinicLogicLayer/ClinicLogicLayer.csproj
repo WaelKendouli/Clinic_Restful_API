@@ -51,6 +51,10 @@
       <Project>{708496d7-af7b-4438-8893-a11278a84f29}</Project>
       <Name>DataAccessLayer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DTOsLayer\DTOsLayer.csproj">
+      <Project>{078cc12d-98b8-4c73-855c-ecac49a64160}</Project>
+      <Name>DTOsLayer</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

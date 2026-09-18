@@ -34,5 +34,15 @@ namespace ClinicManagementSystemAPI.Controllers
             return Ok(specializations);
         }
 
+        [HttpGet("GetAllDoctors", Name = "GetAllDoctors")]
+        public async Task<IActionResult> GetDoctors()
+        {
+            List<DoctorsListDTO> liDoctors = await clsDoctor.ShowListOfDoctorsAsListAsync();
+            if (liDoctors == null)
+            {
+                return BadRequest("Bad request from the client side");
+            }
+            return Ok(liDoctors);
+        }
     }
 }
