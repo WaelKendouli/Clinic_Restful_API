@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccessLayer;
+using DTOsLayer;
 namespace ClinicLogicLayer
 {
     public class clsDoctor
@@ -60,6 +61,10 @@ namespace ClinicLogicLayer
             return await clsDoctorsDA.AddNewDoctorAsync(FirstName, LastName, DateOfBirth, Phone, Email, Address, Gender, PhotoURL, SpecializationID);
         }
 
+        public static async Task<List<DoctorsListDTO>> ShowListOfDoctorsAsListAsync()
+        {
+            return await clsDoctorsDA.ShowListOfDoctorsAsListAsync();
+        }
 
         public static async Task<Dictionary<string, int>> GetSpecializations()
         {
