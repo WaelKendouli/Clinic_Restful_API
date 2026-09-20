@@ -68,6 +68,84 @@ namespace DataAccessLayer
             return doctors;
         }
 
+        public static async Task<bool> UpdateDoctorAsync(int doctorID, string firstName, string lastName, DateTime dateOfBirth, string phone, string email, string address, string gender, string photoURL, int specializationID)
+        {
+            using (var connection = new SqlConnection(clsConnection.ConnectionString))
+            using (var command = new SqlCommand("SP_UpdateDoctor", connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+
+                
+                command.Parameters.AddWithValue("@DoctorID", doctorID);
+
+                
+                command.Parameters.AddWithValue("@FirstName", firstName);
+
+               
+                command.Parameters.AddWithValue("@LastName", lastName);
+
+                
+                command.Parameters.AddWithValue("@DateOfBirth", dateOfBirth);
+
+                
+                command.Parameters.AddWithValue("@Phone", phone);
+
+                
+                if (string.IsNullOrEmpty(email))
+                {
+                    command.Parameters.AddWithValue("@Email", DBNull.Value);
+                }
+                else
+                {
+                    command.Parameters.AddWithValue("@Email", email);
+                }
+
+                
+                if (string.IsNullOrEmpty(address))
+                {
+                    command.Parameters.AddWithValue("@Address", DBNull.Value);
+                }
+                else
+                {
+                    command.Parameters.AddWithValue("@Address", address);
+                }
+
+               
+                if (string.IsNullOrEmpty(gender))
+                {
+                    command.Parameters.AddWithValue("@Gender", DBNull.Value);
+                }
+                else
+                {
+                    command.Parameters.AddWithValue("@Gender", gender);
+                }
+
+                
+                if (string.IsNullOrEmpty(photoURL))
+                {
+                    command.Parameters.AddWithValue("@PhotoURL", DBNull.Value);
+                }
+                else
+                {
+                    command.Parameters.AddWithValue("@PhotoURL", photoURL);
+                }
+
+               
+                command.Parameters.AddWithValue("@SpecializationID", specializationID);
+
+                try
+                {
+                    await connection.OpenAsync();
+                    await command.ExecuteNonQueryAsync();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    
+                    return false;
+                }
+            }
+        }
         public static async Task<int> AddNewDoctorAsync(string firstName, string lastName, DateTime dateOfBirth, string phone, string email, string address, string gender, string photoURL, int specializationID)
         {
             using (var connection = new SqlConnection(clsConnection.ConnectionString))
