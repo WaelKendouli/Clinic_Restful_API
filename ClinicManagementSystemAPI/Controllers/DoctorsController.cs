@@ -44,5 +44,18 @@ namespace ClinicManagementSystemAPI.Controllers
             }
             return Ok(liDoctors);
         }
+
+        [HttpPut("UpdateDoctor/{id}", Name = "UpdateDoctor")]
+        public async Task<IActionResult> UpdateDoctor([FromBody] DoctorDTO DTO)
+        {
+            if(await clsDoctor.UpdateDoctorAsync(DTO.DoctorID, DTO.FirstName, DTO.LastName, DTO.DateOfBirth, DTO.Phone, DTO.Email, DTO.Address, DTO.Gender, DTO.PhotoURL, DTO.SpecializationID))
+            {
+                return Ok("Doctor updated successfully");
+            }
+            else
+            {
+                return BadRequest("Doctor wasn't updated"); 
+            }
+        }
     }
 }
