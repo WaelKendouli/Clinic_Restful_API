@@ -66,6 +66,11 @@ namespace ClinicLogicLayer
             return await clsDoctorsDA.ShowListOfDoctorsAsListAsync();
         }
 
+        public static async Task<bool> UpdateDoctorAsync(int doctorID, string firstName, string lastName, DateTime dateOfBirth, string phone, string email, string address, string gender, string photoURL, int specializationID)
+        {
+            return await clsDoctorsDA.UpdateDoctorAsync(doctorID, firstName, lastName, dateOfBirth, phone, email, address, gender, photoURL, specializationID);
+        }
+
         public static async Task<Dictionary<string, int>> GetSpecializations()
         {
             return await clsDoctorsDA.GetSpecialazationsAsync();
