@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Class1.cs" />
     <Compile Include="clsDoctor.cs" />
+    <Compile Include="clsPatient.cs" />
     <Compile Include="LoggingAuthenticator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

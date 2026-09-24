@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DataAccessLayer;
+using DTOsLayer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,9 +28,9 @@ namespace ClinicLogicLayer
             Phone = phone;
         }
 
-        public static async Task<List<clsPatient>> GetAllPatientsAsListAsync()
+        public static async Task<List<PatientDTO>> GetAllPatientsAsListAsync()
         {
-            return await clsPatient.GetAllPatientsAsListAsync();
+            return await PatientsDA.GetAllPatientsAsListAsync();
         }
     }
 }
