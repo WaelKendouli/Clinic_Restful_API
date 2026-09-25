@@ -167,5 +167,86 @@ namespace DataAccessLayer
             }
         }
 
+        public static async Task<bool> UpdatePatientAsync(int patientID, string firstName, string lastName, DateTime dateOfBirth, string phone, string email, string address, string gender, string password)
+        {
+            using (var connection = new SqlConnection(clsConnection.ConnectionString))
+            using (var command = new SqlCommand("SP_UpdatePatient", connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+
+                // Add Patient ID parameter
+                command.Parameters.AddWithValue("@PatientID", patientID);
+
+                // Add FirstName parameter
+                command.Parameters.AddWithValue("@FirstName", firstName);
+
+                // Add LastName parameter
+                command.Parameters.AddWithValue("@LastName", lastName);
+
+                // Add DateOfBirth parameter
+                command.Parameters.AddWithValue("@DateOfBirth", dateOfBirth);
+
+                // Add Phone parameter
+                command.Parameters.AddWithValue("@Phone", phone);
+
+                // Handle Email (nullable)
+                if (string.IsNullOrEmpty(email))
+                {
+                    command.Parameters.AddWithValue("@Email", DBNull.Value);
+                }
+                else
+                {
+                    command.Parameters.AddWithValue("@Email", email);
+                }
+
+                // Handle Address (nullable)
+                if (string.IsNullOrEmpty(address))
+                {
+                    command.Parameters.AddWithValue("@Address", DBNull.Value);
+                }
+                else
+                {
+                    command.Parameters.AddWithValue("@Address", address);
+                }
+
+                // Handle Gender (nullable)
+                if (string.IsNullOrEmpty(gender))
+                {
+                    command.Parameters.AddWithValue("@Gender", DBNull.Value);
+                }
+                else
+                {
+                    command.Parameters.AddWithValue("@Gender", gender);
+                }
+
+                // Add Password parameter
+                command.Parameters.AddWithValue("@Password", password);
+
+                // Return value parameter (captures RETURN @@ROWCOUNT)
+                var returnParam = new SqlParameter("@ReturnValue", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
+                command.Parameters.Add(returnParam);
+
+                try
+                {
+                    await connection.OpenAsync();
+                    await command.ExecuteNonQueryAsync();
+
+                    int rowsAffected = (int)returnParam.Value;
+
+                    // Return true if at least one row was updated (patient existed)
+                    return rowsAffected > 0;
+                }
+                catch (Exception ex)
+                {
+                    // Handle exception (log it, etc.)
+                    return false;
+                }
+            }
+        }
+
+
     }
 }
