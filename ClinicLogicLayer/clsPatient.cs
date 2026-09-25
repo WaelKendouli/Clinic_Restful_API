@@ -13,12 +13,17 @@ namespace ClinicLogicLayer
         public int PatientID { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+
+        public string Gender { get; set; }
+
+        public string Password { get; set; }
+        public string Address { get; set; }
         public DateTime DateOfBirth { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
 
         public clsPatient(int patientID, string firstName, string lastName,
-            DateTime dateOfBirth, string email, string phone)
+            DateTime dateOfBirth, string email, string Adress, string phone , string gender, string password)
         {
             PatientID = patientID;
             FirstName = firstName;
@@ -26,6 +31,29 @@ namespace ClinicLogicLayer
             DateOfBirth = dateOfBirth;
             Email = email;
             Phone = phone;
+            this.Address = Address;
+            this.Gender = gender;
+            this.Password = password;
+        }
+
+        public clsPatient( string firstName, string lastName,
+            DateTime dateOfBirth, string email, string Adress ,string phone , string gender, string password)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            DateOfBirth = dateOfBirth;
+            Email = email;
+            Phone = phone;
+            this.Address = Address;
+            this.Gender = gender;
+            this.Password = password;
+        }
+
+        public  async Task<int> AddNewPatient()
+        {
+          return await  PatientsDA.AddNewPatientAsync(this.FirstName, this.LastName, this.DateOfBirth,
+              this.Phone, this.Email,
+              this.Address, this.Gender, this.Password);
         }
 
         public static async Task<List<PatientDTO>> GetAllPatientsAsListAsync()

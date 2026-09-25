@@ -30,9 +30,15 @@ namespace DataAccessLayer
                     {
                         while (await reader.ReadAsync())
                         {
-                            // Handle nullable Email field
+                            // Handle nullable fields
                             var EmailOrdinal = reader.GetOrdinal("Email");
                             string Email = reader.IsDBNull(EmailOrdinal) ? "" : reader.GetString(EmailOrdinal);
+
+                            var AddressOrdinal = reader.GetOrdinal("Address");
+                            string Address = reader.IsDBNull(AddressOrdinal) ? "" : reader.GetString(AddressOrdinal);
+
+                            var GenderOrdinal = reader.GetOrdinal("Gender");
+                            string Gender = reader.IsDBNull(GenderOrdinal) ? "" : reader.GetString(GenderOrdinal);
 
                             PatientDTO patient = new PatientDTO(
                                 reader.GetInt32(reader.GetOrdinal("PatientID")),
@@ -40,7 +46,9 @@ namespace DataAccessLayer
                                 reader.GetString(reader.GetOrdinal("LastName")),
                                 reader.GetDateTime(reader.GetOrdinal("DateOfBirth")),
                                 Email,
-                                reader.GetString(reader.GetOrdinal("Phone"))
+                                reader.GetString(reader.GetOrdinal("Phone")),
+                                Address,
+                                Gender
                             );
                             patients.Add(patient);
                         }
@@ -120,7 +128,7 @@ namespace DataAccessLayer
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
 
-                    // Return the newly generated Patient ID
+                    
                     return (int)outputIdParam.Value;
                 }
                 catch (Exception ex)
