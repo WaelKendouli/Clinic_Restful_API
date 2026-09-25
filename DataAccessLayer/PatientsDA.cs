@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data;
+using System.Security.Cryptography;
+
 
 namespace DataAccessLayer
 {
@@ -51,6 +53,82 @@ namespace DataAccessLayer
                 }
             }
             return patients;
+        }
+
+        public static async Task<int> AddNewPatientAsync(string firstName, string lastName, DateTime dateOfBirth, string phone, string email, string address, string gender, string password)
+        {
+            using (var connection = new SqlConnection(clsConnection.ConnectionString))
+            using (var command = new SqlCommand("SP_AddNewPatient", connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+
+                // Add FirstName parameter
+                command.Parameters.AddWithValue("@FirstName", firstName);
+
+                // Add LastName parameter
+                command.Parameters.AddWithValue("@LastName", lastName);
+
+                // Add DateOfBirth parameter
+                command.Parameters.AddWithValue("@DateOfBirth", dateOfBirth);
+
+                // Add Phone parameter
+                command.Parameters.AddWithValue("@Phone", phone);
+
+                // Handle Email (nullable)
+                if (string.IsNullOrEmpty(email))
+                {
+                    command.Parameters.AddWithValue("@Email", DBNull.Value);
+                }
+                else
+                {
+                    command.Parameters.AddWithValue("@Email", email);
+                }
+
+                // Handle Address (nullable)
+                if (string.IsNullOrEmpty(address))
+                {
+                    command.Parameters.AddWithValue("@Address", DBNull.Value);
+                }
+                else
+                {
+                    command.Parameters.AddWithValue("@Address", address);
+                }
+
+                // Handle Gender (nullable)
+                if (string.IsNullOrEmpty(gender))
+                {
+                    command.Parameters.AddWithValue("@Gender", DBNull.Value);
+                }
+                else
+                {
+                    command.Parameters.AddWithValue("@Gender", gender);
+                }
+
+                // Add Password parameter
+                command.Parameters.AddWithValue("@Password", password);
+
+                // Output parameter for the new Patient ID
+                var outputIdParam = new SqlParameter("@NewID", SqlDbType.Int)
+                {
+                    Direction = ParameterDirection.Output
+                };
+                command.Parameters.Add(outputIdParam);
+
+                try
+                {
+                    // Execute the stored procedure asynchronously
+                    await connection.OpenAsync();
+                    await command.ExecuteNonQueryAsync();
+
+                    // Return the newly generated Patient ID
+                    return (int)outputIdParam.Value;
+                }
+                catch (Exception ex)
+                {
+                    
+                    return -1; // Return -1 to indicate failure
+                }
+            }
         }
 
     }
