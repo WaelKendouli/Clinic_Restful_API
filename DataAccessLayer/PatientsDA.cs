@@ -139,5 +139,33 @@ namespace DataAccessLayer
             }
         }
 
+        public static async Task<bool> DeletePatientAsync(int patientID)
+        {
+            using (SqlConnection conx = new SqlConnection(clsConnection.ConnectionString))
+            using (SqlCommand cmd = new SqlCommand("SP_DeletePatient", conx))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@PatientID", patientID);
+
+                try
+                {
+                    await conx.OpenAsync();
+
+                    // The stored procedure returns the rows affected via SELECT
+                    object result = await cmd.ExecuteScalarAsync();
+
+                    int rowsAffected = Convert.ToInt32(result);
+
+                    // Return true if at least one row was deleted
+                    return rowsAffected > 0;
+                }
+                catch (Exception ex)
+                {
+                    // Handle exception (log it, etc.)
+                    return false;
+                }
+            }
+        }
+
     }
 }

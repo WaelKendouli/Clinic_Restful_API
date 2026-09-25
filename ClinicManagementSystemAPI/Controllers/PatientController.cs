@@ -32,5 +32,21 @@ namespace ClinicManagementSystemAPI.Controllers
 
             return Ok(new { NewID = NewPatient.PatientID });
         }
+
+        [HttpDelete("DeletePatient/{patientID}" , Name = "DeletePatient")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+
+        public async Task<IActionResult> DeletePatient(int patientID)
+        {
+            if (await clsPatient.DeletePatientAsync(patientID))
+            {
+                return Ok("Patient deleted successfully");
+            }
+
+            return BadRequest("Failed to delete patient");
+        }
+
     }
 }

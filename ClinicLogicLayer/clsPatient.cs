@@ -61,5 +61,10 @@ namespace ClinicLogicLayer
         {
             return await PatientsDA.GetAllPatientsAsListAsync();
         }
+
+        public static async Task<bool> DeletePatientAsync(int patientID)
+        {
+            return await PatientsDA.DeletePatientAsync(patientID);
+        }
     }
 }
