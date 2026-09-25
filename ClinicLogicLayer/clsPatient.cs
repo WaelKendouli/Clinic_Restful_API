@@ -37,23 +37,24 @@ namespace ClinicLogicLayer
         }
 
         public clsPatient( string firstName, string lastName,
-            DateTime dateOfBirth, string email, string Adress ,string phone , string gender, string password)
+            DateTime dateOfBirth, string email, string address ,string phone , string gender, string password)
         {
             FirstName = firstName;
             LastName = lastName;
             DateOfBirth = dateOfBirth;
             Email = email;
             Phone = phone;
-            this.Address = Address;
+            this.Address = address;
             this.Gender = gender;
             this.Password = password;
         }
 
         public  async Task<int> AddNewPatient()
         {
-          return await  PatientsDA.AddNewPatientAsync(this.FirstName, this.LastName, this.DateOfBirth,
+          this.PatientID = await  PatientsDA.AddNewPatientAsync(this.FirstName, this.LastName, this.DateOfBirth,
               this.Phone, this.Email,
               this.Address, this.Gender, this.Password);
+            return this.PatientID;
         }
 
         public static async Task<List<PatientDTO>> GetAllPatientsAsListAsync()

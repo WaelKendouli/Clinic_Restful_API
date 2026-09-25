@@ -16,9 +16,14 @@ namespace DTOsLayer
         public string Phone { get; set; }
         public string Address { get; set; }
         public string Gender { get; set; }
+        public string Password { get; set; }
 
+
+        public PatientDTO()
+        { 
+        }
         public PatientDTO( string firstName, string lastName,
-            DateTime dateOfBirth, string email, string phone, string address, string gender)
+            DateTime dateOfBirth, string email, string phone, string address, string gender, string password)
         {
             FirstName = firstName;
             LastName = lastName;
@@ -27,6 +32,7 @@ namespace DTOsLayer
             Phone = phone;
             Address = address;
             Gender = gender;
+            Password = password;
         }
 
         public PatientDTO(int patientID, string firstName, string lastName,
