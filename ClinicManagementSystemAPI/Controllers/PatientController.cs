@@ -48,5 +48,22 @@ namespace ClinicManagementSystemAPI.Controllers
             return BadRequest("Failed to delete patient");
         }
 
+        [HttpPut("UpdatePatient/{patientID}", Name = "UpdatePatient")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+
+        public async Task<IActionResult> UpdatePatient([FromBody] PatientDTO patient)
+        {
+            
+            if (await clsPatient.UpdatePatientAsync(patient.PatientID , patient.FirstName,
+                patient.LastName, patient.DateOfBirth, patient.Phone,
+                patient.Email, patient.Address, patient.Gender, patient.Password))
+            {
+                return Ok("Patient updated successfully");
+            }
+            return BadRequest("Failed to update patient");
+        }
+
     }
 }

@@ -66,5 +66,12 @@ namespace ClinicLogicLayer
         {
             return await PatientsDA.DeletePatientAsync(patientID);
         }
+
+        public static async Task<bool> UpdatePatientAsync(int patientID, string firstName, string lastName, DateTime dateOfBirth, string phone, string email, string address, string gender, string password)
+        {
+            return await PatientsDA.UpdatePatientAsync(patientID, firstName, lastName,
+                dateOfBirth, phone, email, address, gender, password);
+        }
+
     }
 }
