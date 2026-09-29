@@ -9,8 +9,11 @@ namespace ClinicManagementSystemAPI.Controllers
     [ApiController]
     public class AppointmentController : ControllerBase
     {
-        [HttpPost("AddNewDoctor", Name = "AddNewDoctor")]
-public async Task<IActionResult> PostAppointment([FromBody] AppointmentDTO DTO)
+        [HttpPost("AddNewAppointment", Name = "AddNewAppointment")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> PostAppointment([FromBody] AppointmentDTO DTO)
         {
             clsAppointment NewAppointment = new clsAppointment(DTO.Date, DTO.Time, DTO.DoctorID, DTO.PatientID, DTO.AppointmentStatusID);
 
