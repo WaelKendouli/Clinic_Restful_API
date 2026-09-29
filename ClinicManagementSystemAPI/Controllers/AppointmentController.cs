@@ -1,0 +1,24 @@
+﻿using ClinicLogicLayer;
+using DTOsLayer;
+using Microsoft.AspNetCore.Mvc;
+
+namespace ClinicManagementSystemAPI.Controllers
+{
+
+    [Route("api/Appointment")]
+    [ApiController]
+    public class AppointmentController : ControllerBase
+    {
+        [HttpPost("AddNewDoctor", Name = "AddNewDoctor")]
+public async Task<IActionResult> PostAppointment([FromBody] AppointmentDTO DTO)
+        {
+            clsAppointment NewAppointment = new clsAppointment(DTO.Date, DTO.Time, DTO.DoctorID, DTO.PatientID, DTO.AppointmentStatusID);
+
+            if (!await NewAppointment.AddNewAppointmentAsync(DTO.Date, DTO.Time, DTO.DoctorID, DTO.PatientID, DTO.AppointmentStatusID))
+            {
+                return BadRequest("New Appointment was not added");
+            }
+            return Ok(DTO);
+        }
+    }
+}
