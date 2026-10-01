@@ -76,6 +76,11 @@ namespace ClinicLogicLayer
             return await clsDoctorsDA.GetSpecialazationsAsync();
         }
 
+        public static async Task<Dictionary<string, int>> GetDoctorsListForOptionsAsync()
+        {
+            return await clsDoctorsDA.GetDoctorsListForOptionsAsync();
+        }
+
         public async Task<bool> Save()
         {
             switch(mode)

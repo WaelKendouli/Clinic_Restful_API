@@ -264,5 +264,40 @@ namespace DataAccessLayer
             }
             return DicSpecializations;
         }
+
+        public static async Task<Dictionary<string, int>> GetDoctorsListForOptionsAsync()
+        {
+            Dictionary<string, int> DicDoctors = new Dictionary<string, int>();
+            using (SqlConnection conx = new SqlConnection(clsConnection.ConnectionString))
+            using (SqlCommand cmd = new SqlCommand("SP_GetDoctorsListForOptions", conx))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                try
+                {
+                    await conx.OpenAsync();
+                    using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            string doctorName = reader.GetString(reader.GetOrdinal("name"));
+                            int doctorID = reader.GetInt32(reader.GetOrdinal("id"));
+
+                            if (!DicDoctors.ContainsKey(doctorName))
+                            {
+                                DicDoctors.Add(doctorName, doctorID);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Handle exception (log it, etc.)
+                    return new Dictionary<string, int>();
+                }
+            }
+            return DicDoctors;
+        }
+
     }
 }

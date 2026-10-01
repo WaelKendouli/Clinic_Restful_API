@@ -57,5 +57,15 @@ namespace ClinicManagementSystemAPI.Controllers
                 return BadRequest("Doctor wasn't updated"); 
             }
         }
+        [HttpGet("GetDoctorsListForOptions", Name = "GetDoctorsListForOptions")]
+        public async Task<IActionResult> GetDoctorsListForOptions()
+        {
+            Dictionary<string, int> doctors = await clsDoctor.GetDoctorsListForOptionsAsync();
+            if (doctors == null)
+            {
+                return BadRequest("Bad request from the client side");
+            }
+            return Ok(doctors);
+        }
     }
 }
