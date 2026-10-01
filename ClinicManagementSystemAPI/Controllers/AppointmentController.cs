@@ -23,5 +23,19 @@ namespace ClinicManagementSystemAPI.Controllers
             }
             return Ok(DTO);
         }
+
+        [HttpGet("GetAppointmentList/{patientID}", Name = "GetAppointmentList")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetAppointmentList(int patientID)
+        {
+            List<AppointmentItemDTO> appointments = await clsAppointment.GetListAppointementByPatientIDAsync(patientID);
+            if (appointments != null)
+            {
+                return Ok(appointments);
+            }
+            return NotFound("No appointments found for the specified patient.");
+        }
     }
 }

@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DTOsLayer;
 using Microsoft.Data.SqlClient;
 
 namespace DataAccessLayer
@@ -55,5 +56,45 @@ namespace DataAccessLayer
                 }
             }
         }
+
+
+        public static async Task<List<AppointmentItemDTO>> GetListAppointementByPatientIDAsync(int patientID)
+        {
+            List<AppointmentItemDTO> appointments = new List<AppointmentItemDTO>();
+            using (SqlConnection conx = new SqlConnection(clsConnection.ConnectionString))
+            using (SqlCommand cmd = new SqlCommand("SP_GetListAppointementByPatientID", conx))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@PatientID", patientID);
+
+                try
+                {
+                    await conx.OpenAsync();
+                    using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            AppointmentItemDTO appointment = new AppointmentItemDTO(
+                                reader.GetInt32(reader.GetOrdinal("AppointmentID")),
+                                reader.GetString(reader.GetOrdinal("FullName")),
+                                reader.GetString(reader.GetOrdinal("DoctorName")),
+                                reader.GetString(reader.GetOrdinal("AppointmentStatus")),
+                                reader.GetString(reader.GetOrdinal("Field")),
+                                reader.GetDateTime(reader.GetOrdinal("Date")),
+                                reader.GetTimeSpan(reader.GetOrdinal("Time"))
+                            );
+                            appointments.Add(appointment);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Handle exception (log it, etc.)
+                    return null;
+                }
+            }
+            return appointments;
+        }
+
     }
 }

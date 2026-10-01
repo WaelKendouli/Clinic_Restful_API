@@ -1,10 +1,11 @@
-﻿using System;
+﻿using DataAccessLayer;
+using DTOsLayer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using DataAccessLayer;
 
 namespace ClinicLogicLayer
 {
@@ -39,6 +40,11 @@ namespace ClinicLogicLayer
         {
            this.AppointmentID =  await clsAppointmentDA.AddNewAppointmentAsync(date, time, doctorID, patientID, appointmentStatusID);
             return this.AppointmentID > 0;
+        }
+
+        public static async Task<List<AppointmentItemDTO>> GetListAppointementByPatientIDAsync(int patientID)
+        {
+            return await clsAppointmentDA.GetListAppointementByPatientIDAsync(patientID);
         }
     }
 }

@@ -25,5 +25,6 @@ namespace DTOsLayer
             AppointmentStatusID = appointmentStatusID;
         }
 
+
     }
 }
