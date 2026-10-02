@@ -50,5 +50,17 @@ namespace ClinicManagementSystemAPI.Controllers
             }
             return Ok("Appointment canceled successfully.");
         }
+        [HttpPut("UpdateAppointment/{appointmentID}", Name = "UpdateAppointment")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateAppointment(int appointmentID, [FromBody] AppointmentDTO DTO)
+        {
+            if (!await clsAppointment.UpdateAppointmentAsync(appointmentID, DTO.Date, DTO.Time, DTO.DoctorID, DTO.PatientID, DTO.AppointmentStatusID))
+            {
+                return BadRequest("Failed to update the appointment.");
+            }
+            return Ok("Appointment updated successfully.");
+        }
     }
 }

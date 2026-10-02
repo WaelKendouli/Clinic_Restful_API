@@ -120,6 +120,45 @@ namespace DataAccessLayer
             }
             return appointments;
         }
+        public static async Task<bool> UpdateAppointmentAsync(int appointmentID, DateTime date, TimeSpan time, int doctorID, int patientID, int appointmentStatusID)
+        {
+            using (var connection = new SqlConnection(clsConnection.ConnectionString))
+            using (var command = new SqlCommand("SP_UpdateAppointment", connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
 
+                // Add Appointment ID parameter
+                command.Parameters.AddWithValue("@AppointmentID", appointmentID);
+
+                // Add Date parameter
+                command.Parameters.AddWithValue("@Date", date);
+
+                // Add Time parameter
+                command.Parameters.AddWithValue("@Time", time);
+
+                // Add DoctorID parameter
+                command.Parameters.AddWithValue("@DoctorID", doctorID);
+
+                // Add PatientID parameter
+                command.Parameters.AddWithValue("@PatientID", patientID);
+
+                // Add AppointmentStatusID parameter
+                command.Parameters.AddWithValue("@AppointmentStatusID", appointmentStatusID);
+
+                try
+                {
+                    await connection.OpenAsync();
+                    int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                    // Return true if at least one row was updated (appointment existed)
+                    return rowsAffected > 0;
+                }
+                catch (Exception ex)
+                {
+                    // Handle exception (log it, etc.)
+                    return false;
+                }
+            }
+        }
     }
 }

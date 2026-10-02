@@ -50,5 +50,10 @@ namespace ClinicLogicLayer
         {
             return await clsAppointmentDA.GetListAppointementByPatientIDAsync(patientID);
         }
+
+        public static async Task<bool> UpdateAppointmentAsync(int appointmentID, DateTime date, TimeSpan time, int doctorID, int patientID, int appointmentStatusID)
+        {
+            return await clsAppointmentDA.UpdateAppointmentAsync(appointmentID, date, time, doctorID, patientID, appointmentStatusID);
+        }
     }
 }
