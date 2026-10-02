@@ -37,5 +37,18 @@ namespace ClinicManagementSystemAPI.Controllers
             }
             return NotFound("No appointments found for the specified patient.");
         }
+
+        [HttpPut("CancelAppointment/{appointmentID}", Name = "CancelAppointment")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> CancelAppointment(int appointmentID)
+        {
+            if (!await clsAppointment.ChangeAppointmentStatusToCanceledAsync(appointmentID))
+            {
+                return BadRequest("Failed to cancel the appointment.");
+            }
+            return Ok("Appointment canceled successfully.");
+        }
     }
 }

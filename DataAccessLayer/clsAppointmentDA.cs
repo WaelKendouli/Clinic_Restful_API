@@ -57,6 +57,31 @@ namespace DataAccessLayer
             }
         }
 
+        public static async Task<bool> ChangeAppointmentStatusToCanceledAsync(int appointmentID)
+        {
+            using (var connection = new SqlConnection(clsConnection.ConnectionString))
+            using (var command = new SqlCommand("SP_ChangeAppointmentStatusToCanceled", connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+
+                // Add AppointmentID parameter
+                command.Parameters.AddWithValue("@AppointmentID", appointmentID);
+
+                try
+                {
+                    await connection.OpenAsync();
+                    int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                    // Return true if at least one row was updated (appointment existed)
+                    return rowsAffected > 0;
+                }
+                catch (Exception ex)
+                {
+                    // Handle exception (log it, etc.)
+                    return false;
+                }
+            }
+        }
 
         public static async Task<List<AppointmentItemDTO>> GetListAppointementByPatientIDAsync(int patientID)
         {

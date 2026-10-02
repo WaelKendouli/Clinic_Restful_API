@@ -42,6 +42,10 @@ namespace ClinicLogicLayer
             return this.AppointmentID > 0;
         }
 
+        public static async Task<bool> ChangeAppointmentStatusToCanceledAsync(int appointmentID)
+        { 
+            return await clsAppointmentDA.ChangeAppointmentStatusToCanceledAsync(appointmentID);
+        }
         public static async Task<List<AppointmentItemDTO>> GetListAppointementByPatientIDAsync(int patientID)
         {
             return await clsAppointmentDA.GetListAppointementByPatientIDAsync(patientID);

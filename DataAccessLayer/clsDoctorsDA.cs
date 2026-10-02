@@ -265,6 +265,7 @@ namespace DataAccessLayer
             return DicSpecializations;
         }
 
+
         public static async Task<Dictionary<string, int>> GetDoctorsListForOptionsAsync()
         {
             Dictionary<string, int> DicDoctors = new Dictionary<string, int>();
