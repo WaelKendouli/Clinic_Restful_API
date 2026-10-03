@@ -75,7 +75,11 @@ namespace ClinicLogicLayer
         {
             return await clsDoctorsDA.GetSpecialazationsAsync();
         }
-        
+
+        public static async Task<List<AppointmentItemDTO>> GetListOfAppointmentsByDoctorIDAsync(int doctorID)
+        {
+            return await clsDoctorsDA.GetListOfAppointmentsByDoctorIDAsync(doctorID);
+        }
 
         public static async Task<Dictionary<string, int>> GetDoctorsListForOptionsAsync()
         {

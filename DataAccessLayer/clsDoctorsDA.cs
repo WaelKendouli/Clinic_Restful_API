@@ -265,7 +265,43 @@ namespace DataAccessLayer
             return DicSpecializations;
         }
 
+        public static async Task<List<AppointmentItemDTO>> GetListOfAppointmentsByDoctorIDAsync(int doctorID)
+        {
+            List<AppointmentItemDTO> appointments = new List<AppointmentItemDTO>();
+            using (SqlConnection conx = new SqlConnection(clsConnection.ConnectionString))
+            using (SqlCommand cmd = new SqlCommand("SP_GetListOfAppointmentsByDoctorID", conx))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@DoctorID", doctorID);
 
+                try
+                {
+                    await conx.OpenAsync();
+                    using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            AppointmentItemDTO appointment = new AppointmentItemDTO(
+                                reader.GetInt32(reader.GetOrdinal("AppointmentID")),
+                                reader.GetString(reader.GetOrdinal("FullName")),
+                                reader.GetString(reader.GetOrdinal("DoctorName")),
+                                reader.GetString(reader.GetOrdinal("AppointmentStatus")),
+                                reader.GetString(reader.GetOrdinal("Field")),
+                                reader.GetDateTime(reader.GetOrdinal("Date")),
+                                reader.GetTimeSpan(reader.GetOrdinal("Time"))
+                            );
+                            appointments.Add(appointment);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Handle exception (log it, etc.)
+                    return null;
+                }
+            }
+            return appointments;
+        }
         public static async Task<Dictionary<string, int>> GetDoctorsListForOptionsAsync()
         {
             Dictionary<string, int> DicDoctors = new Dictionary<string, int>();
