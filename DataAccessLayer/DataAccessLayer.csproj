@@ -155,6 +155,7 @@
     <Compile Include="clsAuthenticationChecker.cs" />
     <Compile Include="clsConnection.cs" />
     <Compile Include="clsDoctorsDA.cs" />
+    <Compile Include="clsMedicalRecordDA.cs" />
     <Compile Include="PatientsDA.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
