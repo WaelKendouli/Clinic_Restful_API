@@ -67,5 +67,15 @@ namespace ClinicManagementSystemAPI.Controllers
             }
             return Ok(doctors);
         }
+        [HttpGet("GetListOfAppointmentsByDoctorID/{DoctorId}", Name = "GetListOfAppointmentsByDoctorID")]
+        public async Task<IActionResult> GetListOfAppointmentsByDoctorID(int DoctorId)
+        {
+            List<AppointmentItemDTO> appointments = await clsDoctor.GetListOfAppointmentsByDoctorIDAsync(DoctorId);
+            if (appointments == null)
+            {
+                return BadRequest("Bad request from the client side");
+            }
+            return Ok(appointments);
+        }
     }
 }
