@@ -20,7 +20,7 @@ namespace ClinicManagementSystemAPI.Controllers
             {
                 return BadRequest(new { Success = false, Message = "Failed to add medical record." });
             }
-            return Ok(new { Success = isAdded });
+            return Ok(new { mr , Success = isAdded });
         }
     }
 }
