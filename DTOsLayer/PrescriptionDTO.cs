@@ -10,7 +10,7 @@ namespace DTOsLayer
     {
         public int PrescriptionID { get; set; }
         public int MedicalRecordID { get; set; }
-        
+
         public DateTime StartDate { get; set; }
 
         public DateTime EndDate { get; set; }
@@ -22,11 +22,14 @@ namespace DTOsLayer
             StartDate = startDate;
             EndDate = endDate;
         }
-        public PrescriptionDTO( int medicalRecordID, DateTime startDate, DateTime endDate)
+        public PrescriptionDTO(int medicalRecordID, DateTime startDate, DateTime endDate)
         {
             MedicalRecordID = medicalRecordID;
             StartDate = startDate;
             EndDate = endDate;
+        }
+        public PrescriptionDTO()
+        {
         }
     }
 }
