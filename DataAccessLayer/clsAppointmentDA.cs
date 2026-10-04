@@ -106,7 +106,9 @@ namespace DataAccessLayer
                                 reader.GetString(reader.GetOrdinal("AppointmentStatus")),
                                 reader.GetString(reader.GetOrdinal("Field")),
                                 reader.GetDateTime(reader.GetOrdinal("Date")),
-                                reader.GetTimeSpan(reader.GetOrdinal("Time"))
+                                reader.GetTimeSpan(reader.GetOrdinal("Time")),
+                                reader.GetInt32(reader.GetOrdinal("DoctorID")),
+                                reader.GetInt32(reader.GetOrdinal("PatientID"))
                             );
                             appointments.Add(appointment);
                         }

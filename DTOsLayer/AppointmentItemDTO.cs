@@ -15,8 +15,13 @@ namespace DTOsLayer
         public string Field { get; set; }
         public DateTime Date { get; set; }
         public TimeSpan Time { get; set; }
+        public int DoctorID { get; set; }
+        public int PatientID { get; set; }
 
-        public AppointmentItemDTO(int appointmentID, string fullName, string doctorName, string appointmentStatus, string field, DateTime date, TimeSpan time)
+
+        public AppointmentItemDTO(int appointmentID, string fullName, string doctorName,
+            string appointmentStatus, string field, DateTime date, TimeSpan time,
+            int doctorID, int patientID)
         {
             AppointmentID = appointmentID;
             FullName = fullName;
@@ -25,6 +30,8 @@ namespace DTOsLayer
             Field = field;
             Date = date;
             Time = time;
+            DoctorID = doctorID;
+            PatientID = patientID;
         }
     }
 }
