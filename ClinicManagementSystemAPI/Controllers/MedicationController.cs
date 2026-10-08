@@ -9,7 +9,7 @@ namespace ClinicManagementSystemAPI.Controllers
         [HttpGet("GetListOfMedications", Name = "GetListOfMedications")]
         public async Task<IActionResult> GetListOfMedications()
         {
-            var medications = await new ClinicLogicLayer.clsMedications().GetListOfMedicationsAsync();
+            var medications = await  ClinicLogicLayer.clsMedications.GetListOfMedicationsAsync();
             if (medications == null)
             {
                 return BadRequest("Failed to retrieve list of medications.");

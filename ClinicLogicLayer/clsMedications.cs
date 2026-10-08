@@ -8,7 +8,7 @@ namespace ClinicLogicLayer
 {
     public class clsMedications
     {
-        public async Task<List<DTOsLayer.MedicationDTO>> GetListOfMedicationsAsync()
+        public static async Task<Dictionary<string, int>> GetListOfMedicationsAsync()
         {
             return await DataAccessLayer.MedicationsDA.GetListOfMedicationsAsync();
         }

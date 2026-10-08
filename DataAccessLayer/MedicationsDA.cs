@@ -10,9 +10,9 @@ namespace DataAccessLayer
 {
     public class MedicationsDA
     {
-        public static async Task<List<MedicationDTO>> GetListOfMedicationsAsync()
+        public static async Task<Dictionary<string, int>> GetListOfMedicationsAsync()
         {
-            List<MedicationDTO> medications = new List<MedicationDTO>();
+            Dictionary<string, int> DicMedications = new Dictionary<string, int>();
             using (SqlConnection conx = new SqlConnection(clsConnection.ConnectionString))
             using (SqlCommand cmd = new SqlCommand("SP_GetListOfMedications", conx))
             {
@@ -25,11 +25,13 @@ namespace DataAccessLayer
                     {
                         while (await reader.ReadAsync())
                         {
-                            MedicationDTO medication = new MedicationDTO(
-                                reader.GetInt32(reader.GetOrdinal("MedicationID")),
-                                reader.GetString(reader.GetOrdinal("MedicationName"))
-                            );
-                            medications.Add(medication);
+                            string medicationName = reader.GetString(reader.GetOrdinal("MedicationName"));
+                            int medicationID = reader.GetInt32(reader.GetOrdinal("MedicationID"));
+
+                            if (!DicMedications.ContainsKey(medicationName))
+                            {
+                                DicMedications.Add(medicationName, medicationID);
+                            }
                         }
                     }
                 }
@@ -39,7 +41,7 @@ namespace DataAccessLayer
                     return null;
                 }
             }
-            return medications;
+            return DicMedications;
         }
     }
 }
