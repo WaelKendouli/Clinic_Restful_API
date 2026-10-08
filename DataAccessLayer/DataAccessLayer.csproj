@@ -157,6 +157,7 @@
     <Compile Include="clsDoctorsDA.cs" />
     <Compile Include="clsMedicalRecordDA.cs" />
     <Compile Include="clsPrescriptionDA.cs" />
+    <Compile Include="MedicationsDA.cs" />
     <Compile Include="PatientsDA.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

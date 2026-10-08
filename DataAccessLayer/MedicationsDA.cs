@@ -36,7 +36,7 @@ namespace DataAccessLayer
                 catch (Exception ex)
                 {
                     // Handle exception (log it, etc.)
-                    return new List<MedicationDTO>();
+                    return null;
                 }
             }
             return medications;

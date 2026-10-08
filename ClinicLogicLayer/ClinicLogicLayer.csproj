@@ -45,6 +45,7 @@
     <Compile Include="clsAppointment.cs" />
     <Compile Include="clsDoctor.cs" />
     <Compile Include="clsMedicalRecord.cs" />
+    <Compile Include="clsMedications.cs" />
     <Compile Include="clsPatient.cs" />
     <Compile Include="clsPrescription.cs" />
     <Compile Include="LoggingAuthenticator.cs" />
