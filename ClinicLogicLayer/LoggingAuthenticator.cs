@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccessLayer;
+using DTOsLayer;
+using System.Security.Cryptography;
+using System.Security.Policy;
 namespace ClinicLogicLayer
 {
     public class LoggingAuthenticator
@@ -19,8 +22,18 @@ namespace ClinicLogicLayer
         public string Password { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
+        public UserDTO UserDTO { get; set; }
 
+        public bool isAuthenticated { get; set; } = false;
 
+        public LoggingAuthenticator(string username, string password)
+        {
+            _Type = enAuthenticationType.PrimaryMethod;
+            Username = username;
+            Password = password;
+            
+
+        }
         public LoggingAuthenticator(string username, string password, string Phone = "", string Email = "")
         {
             _Type = enAuthenticationType.PrimaryMethod;
@@ -38,7 +51,14 @@ namespace ClinicLogicLayer
 
         private bool _PrimaryAuthentication()
         {
-            return clsAuthenticationChecker.CheckAuthentication(this.Username, this.Password);
+            string HashedValue = clsMyHash.GetSha256Hash(this.Password);
+            UserDTO check =  clsAuthenticationChecker.CheckAuthentication(this.Username,HashedValue);
+            if (check != null)
+            {
+                this.UserDTO = check;
+                return true;
+            }
+            return false;
         }
 
         private bool SecondaryAuthentication()
@@ -57,8 +77,6 @@ namespace ClinicLogicLayer
                 case enAuthenticationType.PrimaryMethod:
                  return   _PrimaryAuthentication();
                    
-                case enAuthenticationType.SecondaryMethod:
-                    return SecondaryAuthentication();
             }
             return false;
         }

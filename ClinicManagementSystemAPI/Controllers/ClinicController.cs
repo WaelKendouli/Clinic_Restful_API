@@ -9,15 +9,15 @@ namespace ClinicManagementSystemAPI.Controllers
     public class ClinicController : ControllerBase
     {
         [HttpPost ("auth" ,Name = "AuthenticateUser")]
-        public IActionResult AuthenticateUser([FromBody] LoginDTO DTO)
+        public async Task<IActionResult> AuthenticateUser([FromBody] LoginTestClassDTO DTO)
         { 
             try
             {
-                LoggingAuthenticator authenticator = new LoggingAuthenticator(DTO.Username, DTO.Password, DTO.Phone, DTO.Email);
-                bool isAuthenticated = authenticator.Authenticate();
-                if (isAuthenticated)
+                LoggingAuthenticator authenticator = new LoggingAuthenticator(DTO.Username, DTO.Password);
+                
+                if (authenticator.Authenticate())
                 {
-                    return Ok(new { message = "Authentication successful" });
+                    return Ok(authenticator.UserDTO);
                 }
                 else
                 {
@@ -29,6 +29,7 @@ namespace ClinicManagementSystemAPI.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+        /*
         [HttpPost("Sec-auth" ,Name = "AuthenticateUserWithSecondaryMethod")]
         public IActionResult AuthenticateUserSecondaryMethod([FromBody] LoginDTO DTO)
         {
@@ -51,5 +52,6 @@ namespace ClinicManagementSystemAPI.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+        */
     }
 }
