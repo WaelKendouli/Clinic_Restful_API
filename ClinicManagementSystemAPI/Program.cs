@@ -1,3 +1,6 @@
+using ClinicManagementSystemAPI.Interfaces;
+using ClinicManagementSystemAPI.Utilities;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // 1. ADD SWAGGER SERVICES
@@ -14,6 +17,7 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod();
     });
 });
+builder.Services.AddScoped<ISendEmail, clsEmailSendingService>();
 
 var app = builder.Build();
 
