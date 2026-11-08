@@ -24,7 +24,7 @@ namespace ClinicLogicLayer
         public string Email { get; set; }
         public UserDTO UserDTO { get; set; }
 
-        public bool isAuthenticated { get; set; } = false;
+       
 
         public LoggingAuthenticator(string username, string password)
         {

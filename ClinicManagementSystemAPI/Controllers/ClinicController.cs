@@ -4,7 +4,7 @@ using ClinicLogicLayer;
 using DTOsLayer;
 namespace ClinicManagementSystemAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/Clinic")]
     [ApiController]
     public class ClinicController : ControllerBase
     {
