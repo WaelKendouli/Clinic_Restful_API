@@ -20,9 +20,9 @@ namespace ClinicManagementSystemAPI.Controllers
             {
                 LoggingAuthenticator authenticator = new LoggingAuthenticator(DTO.Username, DTO.Password);
                 
-                if (authenticator.Authenticate())
+                if (await authenticator.Authenticate())
                 {
-                    return Ok(authenticator.UserDTO);
+                    return Ok(authenticator.UserObj);
                 }
                 else
                 {

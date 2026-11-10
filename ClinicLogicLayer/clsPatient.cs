@@ -14,7 +14,7 @@ namespace ClinicLogicLayer
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
-        public string Gender { get; set; }
+        public bool Gender { get; set; }
 
         public string Password { get; set; }
         public string Address { get; set; }
@@ -23,7 +23,7 @@ namespace ClinicLogicLayer
         public string Phone { get; set; }
 
         public clsPatient(int patientID, string firstName, string lastName,
-            DateTime dateOfBirth, string email, string Adress, string phone , string gender, string password)
+            DateTime dateOfBirth, string email, string Adress, string phone , bool gender, string password)
         {
             PatientID = patientID;
             FirstName = firstName;
@@ -37,7 +37,7 @@ namespace ClinicLogicLayer
         }
 
         public clsPatient( string firstName, string lastName,
-            DateTime dateOfBirth, string email, string address ,string phone , string gender, string password)
+            DateTime dateOfBirth, string email, string address ,string phone , bool gender, string password)
         {
             FirstName = firstName;
             LastName = lastName;
@@ -67,7 +67,7 @@ namespace ClinicLogicLayer
             return await PatientsDA.DeletePatientAsync(patientID);
         }
 
-        public static async Task<bool> UpdatePatientAsync(int patientID, string firstName, string lastName, DateTime dateOfBirth, string phone, string email, string address, string gender, string password)
+        public static async Task<bool> UpdatePatientAsync(int patientID, string firstName, string lastName, DateTime dateOfBirth, string phone, string email, string address, bool gender, string password)
         {
             return await PatientsDA.UpdatePatientAsync(patientID, firstName, lastName,
                 dateOfBirth, phone, email, address, gender, password);

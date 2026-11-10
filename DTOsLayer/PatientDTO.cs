@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DTOsLayer.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,46 +7,50 @@ using System.Threading.Tasks;
 
 namespace DTOsLayer
 {
-    public class PatientDTO
+    public class PatientDTO : UserDTO , IF_User
     {
         public int PatientID { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public DateTime DateOfBirth { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
-        public string Address { get; set; }
-        public string Gender { get; set; }
-        public string Password { get; set; }
+        public string Address { get; set; } = string.Empty;
 
+        // 1. Empty ctor for serializers/ORM
+        public PatientDTO() { }
 
-        public PatientDTO()
-        { 
-        }
-        public PatientDTO( string firstName, string lastName,
-            DateTime dateOfBirth, string email, string phone, string address, string gender, string password)
+        // 2. Ctor for CREATING a new patient (no IDs yet)
+        //    Matches the UserDTO "create" ctor signature exactly, then adds Address.
+        public PatientDTO(
+            string username,
+            string hashedPassword,
+            string firstName,
+            string lastName,
+            string email,
+            string phone,
+            bool gender,
+            DateTime dateOfBirth,
+            string address)
+            : base(username, hashedPassword, firstName, lastName,
+                   email, phone, gender, dateOfBirth, "Patient")
         {
-            FirstName = firstName;
-            LastName = lastName;
-            DateOfBirth = dateOfBirth;
-            Email = email;
-            Phone = phone;
             Address = address;
-            Gender = gender;
-            Password = password;
         }
 
-        public PatientDTO(int patientID, string firstName, string lastName,
-            DateTime dateOfBirth, string email, string phone, string address, string gender)
+        // 3. Ctor for READING an existing patient (has IDs)
+        public PatientDTO(
+            int patientID,
+            int userID,
+            string username,
+            string hashedPassword,
+            string firstName,
+            string lastName,
+            string email,
+            string phone,
+            bool gender,
+            DateTime dateOfBirth,
+            string address)
+            : base(userID, username, hashedPassword, firstName, lastName,
+                   email, phone, gender, dateOfBirth, "Patient")
         {
             PatientID = patientID;
-            FirstName = firstName;
-            LastName = lastName;
-            DateOfBirth = dateOfBirth;
-            Email = email;
-            Phone = phone;
             Address = address;
-            Gender = gender;
         }
     }
 }

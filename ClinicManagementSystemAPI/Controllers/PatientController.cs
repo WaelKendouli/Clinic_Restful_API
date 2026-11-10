@@ -23,7 +23,7 @@ namespace ClinicManagementSystemAPI.Controllers
         {
             var NewPatient = new clsPatient(patient.FirstName, patient.LastName ,
                 patient.DateOfBirth , patient.Email , patient.Address ,
-                patient.Phone , patient.Gender , patient.Password);
+                patient.Phone , patient.Gender , patient.HashedPassword);
 
             if ( await NewPatient.AddNewPatient() == -1)
             {
@@ -58,7 +58,7 @@ namespace ClinicManagementSystemAPI.Controllers
             
             if (await clsPatient.UpdatePatientAsync(patient.PatientID , patient.FirstName,
                 patient.LastName, patient.DateOfBirth, patient.Phone,
-                patient.Email, patient.Address, patient.Gender, patient.Password))
+                patient.Email, patient.Address, patient.Gender, patient.HashedPassword))
             {
                 return Ok("Patient updated successfully");
             }

@@ -42,15 +42,7 @@ namespace DataAccessLayer
                             string Gender = reader.IsDBNull(GenderOrdinal) ? "" : reader.GetString(GenderOrdinal);
 
                             PatientDTO patient = new PatientDTO(
-                                reader.GetInt32(reader.GetOrdinal("PatientID")),
-                                reader.GetString(reader.GetOrdinal("FirstName")),
-                                reader.GetString(reader.GetOrdinal("LastName")),
-                                reader.GetDateTime(reader.GetOrdinal("DateOfBirth")),
-                                Email,
-                                reader.GetString(reader.GetOrdinal("Phone")),
-                                Address,
-                                Gender
-                            );
+                                ); // I removed the rest of ordinalites for testing purposes 
                             patients.Add(patient);
                         }
                     }
@@ -64,7 +56,7 @@ namespace DataAccessLayer
             return patients;
         }
 
-        public static async Task<int> AddNewPatientAsync(string firstName, string lastName, DateTime dateOfBirth, string phone, string email, string address, string gender, string password)
+        public static async Task<int> AddNewPatientAsync(string firstName, string lastName, DateTime dateOfBirth, string phone, string email, string address, bool gender, string password)
         {
             using (var connection = new SqlConnection(clsConnection.ConnectionString))
             using (var command = new SqlCommand("SP_AddNewPatient", connection))
@@ -104,7 +96,7 @@ namespace DataAccessLayer
                 }
 
                 // Handle Gender (nullable)
-                if (string.IsNullOrEmpty(gender))
+                if (gender==null)
                 {
                     command.Parameters.AddWithValue("@Gender", DBNull.Value);
                 }
@@ -168,7 +160,7 @@ namespace DataAccessLayer
             }
         }
 
-        public static async Task<bool> UpdatePatientAsync(int patientID, string firstName, string lastName, DateTime dateOfBirth, string phone, string email, string address, string gender, string password)
+        public static async Task<bool> UpdatePatientAsync(int patientID, string firstName, string lastName, DateTime dateOfBirth, string phone, string email, string address, bool gender, string password)
         {
             using (var connection = new SqlConnection(clsConnection.ConnectionString))
             using (var command = new SqlCommand("SP_UpdatePatient", connection))
@@ -211,7 +203,7 @@ namespace DataAccessLayer
                 }
 
                 // Handle Gender (nullable)
-                if (string.IsNullOrEmpty(gender))
+                if (gender== null)
                 {
                     command.Parameters.AddWithValue("@Gender", DBNull.Value);
                 }

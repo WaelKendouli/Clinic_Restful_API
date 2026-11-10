@@ -41,10 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdminDTO.cs" />
     <Compile Include="AppointmentDTO.cs" />
     <Compile Include="AppointmentItemDTO.cs" />
     <Compile Include="DoctorDTO.cs" />
     <Compile Include="DoctorsListDTO.cs" />
+    <Compile Include="Interfaces\IF_User.cs" />
     <Compile Include="LoginDTO.cs" />
     <Compile Include="LoginTestClassDTO.cs" />
     <Compile Include="MedicalRecordDTO.cs" />

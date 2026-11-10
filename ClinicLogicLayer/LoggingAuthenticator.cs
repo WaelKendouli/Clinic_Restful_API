@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DataAccessLayer;
 using DTOsLayer;
+using DTOsLayer.Interfaces;
 using System.Security.Cryptography;
 using System.Security.Policy;
 namespace ClinicLogicLayer
@@ -22,7 +23,7 @@ namespace ClinicLogicLayer
         public string Password { get; set; }
         public string Phone { get; set; }
         public string Email { get; set; }
-        public UserDTO UserDTO { get; set; }
+        public IF_User UserObj { get; set; }
 
        
 
@@ -49,16 +50,16 @@ namespace ClinicLogicLayer
             _Type = enAuthenticationType.SecondaryMethod;
         }
 
-        private bool _PrimaryAuthentication()
+        private async Task<bool> _PrimaryAuthentication()
         {
             string HashedValue = clsMyHash.GetSha256Hash(this.Password);
-            UserDTO check =  clsAuthenticationChecker.CheckAuthentication(this.Username,HashedValue);
-            if (check != null)
+            var UserDTO =  clsAuthenticationChecker.CheckAuthentication(this.Username,HashedValue);
+            if (UserDTO == null)
             {
-                this.UserDTO = check;
-                return true;
+                return false;
             }
-            return false;
+            this.UserObj = await clsAuthenticationChecker.GetDataBasedOnRoles(UserDTO);
+            return true;
         }
 
         private bool SecondaryAuthentication()
@@ -70,15 +71,11 @@ namespace ClinicLogicLayer
             return clsAuthenticationChecker.SecondaryAuthentication(this.Phone, this.Email);
         }
 
-        public bool Authenticate()
+        public async Task<bool> Authenticate()
         {
-            switch(_Type)
-            {
-                case enAuthenticationType.PrimaryMethod:
-                 return   _PrimaryAuthentication();
-                   
-            }
-            return false;
+           
+                 return  await _PrimaryAuthentication();
+            
         }
 
     }

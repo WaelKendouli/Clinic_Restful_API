@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DTOsLayer.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DTOsLayer
 {
-    public class UserDTO
+    public class UserDTO : IF_User
     {
         public int UserID { get; set; }
         public string Username { get; set; } = string.Empty;
@@ -15,7 +16,7 @@ namespace DTOsLayer
         public string LastName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Phone { get; set; }
-        public bool? Gender { get; set; }
+        public bool Gender { get; set; }
         public DateTime DateOfBirth { get; set; }
 
         public string Role { get; set; }
@@ -27,7 +28,7 @@ namespace DTOsLayer
 
         // 2. Constructor for CREATING a new user (No UserID yet)
         public UserDTO(string username, string hashedPassword, string firstName, string lastName,
-                       string email, string phone, bool? gender, DateTime dateOfBirth, string Role)
+                       string email, string phone, bool gender, DateTime dateOfBirth, string Role)
         {
             Username = username;
             HashedPassword = hashedPassword;
@@ -41,7 +42,7 @@ namespace DTOsLayer
         }
 
         public UserDTO(int userID,string username, string hashedPassword, string firstName, string lastName,
-                       string email, string phone, bool? gender, DateTime dateOfBirth, string Role)
+                       string email, string phone, bool gender, DateTime dateOfBirth, string Role)
         {
             UserID = userID;
             Username = username;

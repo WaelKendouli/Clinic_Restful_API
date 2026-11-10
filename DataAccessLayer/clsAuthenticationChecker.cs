@@ -1,4 +1,5 @@
 ﻿using DTOsLayer;
+using DTOsLayer.Interfaces;
 using Microsoft.Data;
 using Microsoft.Data.SqlClient;
 using System;
@@ -37,7 +38,7 @@ namespace DataAccessLayer
                             string phone = reader.IsDBNull(PhoneOrdinal) ? null : reader.GetString(PhoneOrdinal);
 
                             var GenderOrdinal = reader.GetOrdinal("Gender");
-                            bool? gender = reader.IsDBNull(GenderOrdinal) ? (bool?)null : reader.GetBoolean(GenderOrdinal);
+                            bool gender = reader.IsDBNull(GenderOrdinal) ? false : reader.GetBoolean(GenderOrdinal);
 
                             var DateOfBirthOrdinal = reader.GetOrdinal("DateOfBirth");
                             DateTime dateOfBirth = reader.IsDBNull(DateOfBirthOrdinal) ? DateTime.MinValue : reader.GetDateTime(DateOfBirthOrdinal);
@@ -68,6 +69,109 @@ namespace DataAccessLayer
             // If no rows were returned, return null
             return null;
         }
+        public static async Task<PatientDTO> GetPatientDataByUserIDAsync(UserDTO user)
+        {
+            using (SqlConnection conx = new SqlConnection(clsConnection.ConnectionString))
+            using (SqlCommand cmd = new SqlCommand("SP_GetPatientDataByUserID", conx))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@UserID", user.UserID);
+
+                try
+                {
+                    await conx.OpenAsync();
+                    using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            // Handle nullable Address safely
+                            var AddressOrdinal = reader.GetOrdinal("Address");
+                            string address = reader.IsDBNull(AddressOrdinal) ? string.Empty : reader.GetString(AddressOrdinal);
+
+                            int patientID = reader.GetInt32(reader.GetOrdinal("PatientID"));
+
+                            // Construct the PatientDTO using the existing UserDTO data + the new Patient data
+                            return new PatientDTO(
+                                patientID,
+                                user.UserID,
+                                user.Username,
+                                user.HashedPassword,
+                                user.FirstName,
+                                user.LastName,
+                                user.Email,
+                                user.Phone,
+                                user.Gender,
+                                user.DateOfBirth,
+                                address
+                            );
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Handle exception (log it, etc.)
+                    return null;
+                }
+            }
+            return null;
+        }
+
+        public static async Task<AdminDTO> GetAdminDataByUserIDAsync(UserDTO user)
+        {
+            using (SqlConnection conx = new SqlConnection(clsConnection.ConnectionString))
+            using (SqlCommand cmd = new SqlCommand("SP_GetAdminDataByUserID", conx))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@UserID", user.UserID);
+
+                try
+                {
+                    await conx.OpenAsync();
+                    using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            int adminID = reader.GetInt32(reader.GetOrdinal("AdminID"));
+
+                            // Construct the AdminDTO using the existing UserDTO data + the new AdminID
+                            return new AdminDTO(
+                                adminID,
+                                user.UserID,
+                                user.Username,
+                                user.HashedPassword,
+                                user.FirstName,
+                                user.LastName,
+                                user.Email,
+                                user.Phone,
+                                user.Gender,
+                                user.DateOfBirth
+                            );
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Handle exception (log it, etc.)
+                    return null;
+                }
+            }
+            return null;
+        }
+
+        public async static Task<IF_User> GetDataBasedOnRoles(UserDTO DTO)
+        {
+            switch (DTO.Role)
+            {
+                case "Patient":
+                    return await GetPatientDataByUserIDAsync(DTO);
+                case "Doctor":
+                    break;
+                case "Admin":
+                    return await GetAdminDataByUserIDAsync(DTO);
+            }
+            return null;
+        }
+
         public static bool SecondaryAuthentication(string phone, string email)
         {
             using (SqlConnection conx = new SqlConnection(clsConnection.ConnectionString))
