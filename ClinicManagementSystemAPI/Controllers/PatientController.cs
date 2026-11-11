@@ -56,9 +56,7 @@ namespace ClinicManagementSystemAPI.Controllers
         public async Task<IActionResult> UpdatePatient([FromBody] PatientDTO patient)
         {
             
-            if (await clsPatient.UpdatePatientAsync(patient.PatientID , patient.FirstName,
-                patient.LastName, patient.DateOfBirth, patient.Phone,
-                patient.Email, patient.Address, patient.Gender, patient.HashedPassword))
+            if (await clsPatient.UpdatePatientAsync(patient))
             {
                 return Ok("Patient updated successfully");
             }

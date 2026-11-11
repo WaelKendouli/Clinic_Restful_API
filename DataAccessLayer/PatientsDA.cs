@@ -160,81 +160,69 @@ namespace DataAccessLayer
             }
         }
 
-        public static async Task<bool> UpdatePatientAsync(int patientID, string firstName, string lastName, DateTime dateOfBirth, string phone, string email, string address, bool gender, string password)
+        public static async Task<bool> UpdatePatientAsync(PatientDTO patient)
         {
             using (var connection = new SqlConnection(clsConnection.ConnectionString))
             using (var command = new SqlCommand("SP_UpdatePatient", connection))
             {
                 command.CommandType = CommandType.StoredProcedure;
 
-                // Add Patient ID parameter
-                command.Parameters.AddWithValue("@PatientID", patientID);
+                // 1. Add UserID parameter
+                command.Parameters.AddWithValue("@UserID", patient.UserID);
 
-                // Add FirstName parameter
-                command.Parameters.AddWithValue("@FirstName", firstName);
+                // 2. Add Base User Data
+                command.Parameters.AddWithValue("@FirstName", patient.FirstName);
+                command.Parameters.AddWithValue("@LastName", patient.LastName);
+                command.Parameters.AddWithValue("@DateOfBirth", patient.DateOfBirth);
 
-                // Add LastName parameter
-                command.Parameters.AddWithValue("@LastName", lastName);
+                // Handle Phone (nullable in DB)
+                if (string.IsNullOrEmpty(patient.Phone))
+                    command.Parameters.AddWithValue("@Phone", DBNull.Value);
+                else
+                    command.Parameters.AddWithValue("@Phone", patient.Phone);
 
-                // Add DateOfBirth parameter
-                command.Parameters.AddWithValue("@DateOfBirth", dateOfBirth);
-
-                // Add Phone parameter
-                command.Parameters.AddWithValue("@Phone", phone);
-
-                // Handle Email (nullable)
-                if (string.IsNullOrEmpty(email))
-                {
+                // Handle Email (nullable in DB)
+                if (string.IsNullOrEmpty(patient.Email))
                     command.Parameters.AddWithValue("@Email", DBNull.Value);
-                }
                 else
-                {
-                    command.Parameters.AddWithValue("@Email", email);
-                }
+                    command.Parameters.AddWithValue("@Email", patient.Email);
 
-                // Handle Address (nullable)
-                if (string.IsNullOrEmpty(address))
-                {
+                // 3. Add Patient Specific Data
+                // Handle Address (nullable in DB)
+                if (string.IsNullOrEmpty(patient.Address))
                     command.Parameters.AddWithValue("@Address", DBNull.Value);
-                }
                 else
-                {
-                    command.Parameters.AddWithValue("@Address", address);
-                }
+                    command.Parameters.AddWithValue("@Address", patient.Address);
 
-                // Handle Gender (nullable)
-                if (gender== null)
-                {
-                    command.Parameters.AddWithValue("@Gender", DBNull.Value);
-                }
-                else
-                {
-                    command.Parameters.AddWithValue("@Gender", gender);
-                }
+                // 4. Add Gender (Mapped to BIT in SQL)
+                command.Parameters.AddWithValue("@Gender", patient.Gender);
 
-                // Add Password parameter
-                command.Parameters.AddWithValue("@Password", password);
-
-                // Return value parameter (captures RETURN @@ROWCOUNT)
-                var returnParam = new SqlParameter("@ReturnValue", SqlDbType.Int)
+                // 5. Add Return Value Parameter to capture @@ROWCOUNT
+                var returnValueParam = new SqlParameter("@ReturnValue", SqlDbType.Int)
                 {
                     Direction = ParameterDirection.ReturnValue
                 };
-                command.Parameters.Add(returnParam);
+                command.Parameters.Add(returnValueParam);
 
                 try
                 {
                     await connection.OpenAsync();
                     await command.ExecuteNonQueryAsync();
 
-                    int rowsAffected = (int)returnParam.Value;
+                    // Read the RETURN @@ROWCOUNT value from the stored procedure
+                    int rowsAffected = (int)returnValueParam.Value;
 
-                    // Return true if at least one row was updated (patient existed)
+                    // Return true if the user was found and updated (rowsAffected > 0)
                     return rowsAffected > 0;
+                }
+                catch (SqlException ex)
+                {
+                   
+                    return false;
                 }
                 catch (Exception ex)
                 {
-                    // Handle exception (log it, etc.)
+                    
                     return false;
                 }
             }
