@@ -11,9 +11,9 @@ namespace DataAccessLayer
     public class clsDoctorsDA
     {
 
-        public static async Task<List<DoctorsListDTO>> ShowListOfDoctorsAsListAsync()
+        public static async Task<List<DoctorDTO>> ShowListOfDoctorsAsListAsync()
         {
-            List<DoctorsListDTO> doctors = new List<DoctorsListDTO>();
+            List<DoctorDTO> doctors = new List<DoctorDTO>();
             using (SqlConnection conx = new SqlConnection(clsConnection.ConnectionString))
             using (SqlCommand cmd = new SqlCommand("SP_ShowListOfDoctors", conx))
             {
@@ -26,42 +26,53 @@ namespace DataAccessLayer
                     {
                         while (await reader.ReadAsync())
                         {
-                            // Handle nullable fields
-                            var GenderOrdinal = reader.GetOrdinal("Gender");
-                            string Gender = reader.IsDBNull(GenderOrdinal) ? "" : reader.GetString(GenderOrdinal);
+                            // Safe string reads (returns "" if DB value is NULL)
+                            string Email = reader.IsDBNull(reader.GetOrdinal("Email")) ? "" : reader.GetString(reader.GetOrdinal("Email"));
+                            string Phone = reader.IsDBNull(reader.GetOrdinal("Phone")) ? "" : reader.GetString(reader.GetOrdinal("Phone"));
+                            string PhotoURL = reader.IsDBNull(reader.GetOrdinal("PhotoURL")) ? "" : reader.GetString(reader.GetOrdinal("PhotoURL"));
+                            string Bio = reader.IsDBNull(reader.GetOrdinal("Bio")) ? "" : reader.GetString(reader.GetOrdinal("Bio"));
+                            string Specialization = reader.IsDBNull(reader.GetOrdinal("Specialization")) ? "" : reader.GetString(reader.GetOrdinal("Specialization"));
+                            string Username = reader.IsDBNull(reader.GetOrdinal("Username")) ? "" : reader.GetString(reader.GetOrdinal("Username"));
+                            string HashedPassword = reader.IsDBNull(reader.GetOrdinal("HashedPassword")) ? "" : reader.GetString(reader.GetOrdinal("HashedPassword"));
+                            string FirstName = reader.IsDBNull(reader.GetOrdinal("FirstName")) ? "" : reader.GetString(reader.GetOrdinal("FirstName"));
+                            string LastName = reader.IsDBNull(reader.GetOrdinal("LastName")) ? "" : reader.GetString(reader.GetOrdinal("LastName"));
 
-                            var EmailOrdinal = reader.GetOrdinal("Email");
-                            string Email = reader.IsDBNull(EmailOrdinal) ? "" : reader.GetString(EmailOrdinal);
+                            // Safe boolean read
+                            bool gender = reader.IsDBNull(reader.GetOrdinal("Gender")) ? false : reader.GetBoolean(reader.GetOrdinal("Gender"));
 
-                            var AddressOrdinal = reader.GetOrdinal("Address");
-                            string Address = reader.IsDBNull(AddressOrdinal) ? "" : reader.GetString(AddressOrdinal);
+                            // Safe DateTime read
+                            DateTime dateOfBirth = reader.IsDBNull(reader.GetOrdinal("DateOfBirth")) ? DateTime.MinValue : reader.GetDateTime(reader.GetOrdinal("DateOfBirth"));
 
-                            var PhotoURLOrdinal = reader.GetOrdinal("PhotoURL");
-                            string PhotoURL = reader.IsDBNull(PhotoURLOrdinal) ? "" : reader.GetString(PhotoURLOrdinal);
+                            // Safe Integer reads (use 0 if NULL)
+                            int specializationID = reader.IsDBNull(reader.GetOrdinal("SpecialazationID")) ? 0 : reader.GetInt32(reader.GetOrdinal("SpecialazationID"));
+                            int doctorID = reader.IsDBNull(reader.GetOrdinal("DoctorID")) ? 0 : reader.GetInt32(reader.GetOrdinal("DoctorID"));
+                            int userID = reader.IsDBNull(reader.GetOrdinal("UserID")) ? 0 : reader.GetInt32(reader.GetOrdinal("UserID"));
 
-                            var SpecializationOrdinal = reader.GetOrdinal("Specialization");
-                            string Specialization = reader.IsDBNull(SpecializationOrdinal) ? "" : reader.GetString(SpecializationOrdinal);
-
-                            DoctorsListDTO doctor = new DoctorsListDTO(
-                                reader.GetInt32(reader.GetOrdinal("DoctorID")),
-                                reader.GetString(reader.GetOrdinal("FirstName")),
-                                reader.GetString(reader.GetOrdinal("LastName")),
-                                Gender,
-                                reader.GetString(reader.GetOrdinal("Phone")),
-                                Email,
-                                Address,
+                            DoctorDTO doctor = new DoctorDTO(
+                                doctorID,
                                 PhotoURL,
-                                reader.GetInt32(reader.GetOrdinal("SpecialazationID")),
+                                specializationID,
+                                Bio,
                                 Specialization,
-                                reader.GetDateTime(reader.GetOrdinal("DateOfBirth"))
+                                userID,
+                                Username,
+                                HashedPassword,
+                                FirstName,
+                                LastName,
+                                Email,
+                                Phone,
+                                gender,
+                                dateOfBirth,
+                                "Doctor"
                             );
+
                             doctors.Add(doctor);
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    
+                    // Log exception here
                     return null;
                 }
             }

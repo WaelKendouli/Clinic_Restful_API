@@ -61,7 +61,7 @@ namespace ClinicLogicLayer
             return await clsDoctorsDA.AddNewDoctorAsync(FirstName, LastName, DateOfBirth, Phone, Email, Address, Gender, PhotoURL, SpecializationID);
         }
 
-        public static async Task<List<DoctorsListDTO>> ShowListOfDoctorsAsListAsync()
+        public static async Task<List<DoctorDTO>> ShowListOfDoctorsAsListAsync()
         {
             return await clsDoctorsDA.ShowListOfDoctorsAsListAsync();
         }

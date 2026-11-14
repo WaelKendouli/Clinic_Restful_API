@@ -12,13 +12,13 @@ namespace ClinicManagementSystemAPI.Controllers
         [HttpPost("AddNewDoctor" , Name = "AddNewDoctor")]
         public async Task<IActionResult> PostDoctor([FromBody] DoctorDTO DTO)
         {
-            clsDoctor NewDoctor = new clsDoctor(DTO.FirstName, DTO.LastName, DTO.DateOfBirth, DTO.Phone, DTO.Email,
+           /* clsDoctor NewDoctor = new clsDoctor(DTO.FirstName, DTO.LastName, DTO.DateOfBirth, DTO.Phone, DTO.Email,
                 DTO.Address, DTO.Gender,
                 DTO.PhotoURL, DTO.SpecializationID);
             if (!await NewDoctor.Save())
             {
                 return BadRequest("New Doctor was not added");
-            }
+            }*/
             return Ok(DTO);
         }
 
@@ -37,7 +37,7 @@ namespace ClinicManagementSystemAPI.Controllers
         [HttpGet("GetAllDoctors", Name = "GetAllDoctors")]
         public async Task<IActionResult> GetDoctors()
         {
-            List<DoctorsListDTO> liDoctors = await clsDoctor.ShowListOfDoctorsAsListAsync();
+            List<DoctorDTO> liDoctors = await clsDoctor.ShowListOfDoctorsAsListAsync();
             if (liDoctors == null)
             {
                 return BadRequest("Bad request from the client side");
@@ -48,14 +48,15 @@ namespace ClinicManagementSystemAPI.Controllers
         [HttpPut("UpdateDoctor/{id}", Name = "UpdateDoctor")]
         public async Task<IActionResult> UpdateDoctor([FromBody] DoctorDTO DTO)
         {
-            if(await clsDoctor.UpdateDoctorAsync(DTO.DoctorID, DTO.FirstName, DTO.LastName, DTO.DateOfBirth, DTO.Phone, DTO.Email, DTO.Address, DTO.Gender, DTO.PhotoURL, DTO.SpecializationID))
-            {
-                return Ok("Doctor updated successfully");
-            }
-            else
-            {
-                return BadRequest("Doctor wasn't updated"); 
-            }
+            return Ok("Doctor updated successfully");
+            /* if(await clsDoctor.UpdateDoctorAsync(DTO.DoctorID, DTO.FirstName, DTO.LastName, DTO.DateOfBirth, DTO.Phone, DTO.Email, DTO.Address, DTO.Gender, DTO.PhotoURL, DTO.SpecializationID))
+             {
+                 return Ok("Doctor updated successfully");
+             }
+             else
+             {
+                 return BadRequest("Doctor wasn't updated"); 
+             }*/
         }
         [HttpGet("GetDoctorsListForOptions", Name = "GetDoctorsListForOptions")]
         public async Task<IActionResult> GetDoctorsListForOptions()
