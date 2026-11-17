@@ -13,7 +13,7 @@ namespace DTOsLayer
       public int SlotDuration { get; set; }
       public bool IsActive { get; set; }
 
-        public List<TimeSpan> liTimeSlots = new List<TimeSpan>();
+        public List<TimeSpan> liTimeSlots { get; set; } = new List<TimeSpan>();
 
         public DoctorScheduelDTO()
         {
