@@ -81,6 +81,7 @@
   <ItemGroup>
     <Compile Include="Class1.cs" />
     <Compile Include="clsAppointment.cs" />
+    <Compile Include="clsClinicService.cs" />
     <Compile Include="clsDoctor.cs" />
     <Compile Include="clsMedicalRecord.cs" />
     <Compile Include="clsMedications.cs" />
