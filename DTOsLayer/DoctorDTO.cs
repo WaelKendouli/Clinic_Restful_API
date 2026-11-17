@@ -18,6 +18,8 @@ namespace DTOsLayer
 
         public string Bio { get; set; } // Added based on your database image
 
+        public DoctorScheduelDTO Scheduel { get; set; } = new DoctorScheduelDTO();
+
         // Empty Constructor for serializers/ORM
         public DoctorDTO() : base()
         {
@@ -51,5 +53,35 @@ namespace DTOsLayer
             Bio = bio;
             Specialization = specialization;
         }
+
+        public DoctorDTO(
+       int doctorID,
+       string photoURL,
+       int specializationID,
+       string specialization,
+       string bio, // <-- Added Schedule object here  // User properties below:
+       int userID,
+       string username,
+       string hashedPassword,
+       string firstName,
+       string lastName,
+       string email,
+       string phone,
+       bool gender,
+       DateTime dateOfBirth,
+       string role , DoctorScheduelDTO scheduel
+       )
+       : base(userID, username, hashedPassword, firstName, lastName, email, phone, gender, dateOfBirth, role)
+        {
+            DoctorID = doctorID;
+            PhotoURL = photoURL;
+            SpecializationID = specializationID;
+            Specialization = specialization;
+            Bio = bio;
+            Scheduel = scheduel ; 
+        }
+
+
+
     }
 }
