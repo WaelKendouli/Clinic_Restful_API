@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace DTOsLayer
 {
-    public class AppointmentItemDTO
+    public class ad_AppointmentItemDTO
     {
+        //displaying purposes only for admins
         public int AppointmentID { get; set; }
         public string FullName { get; set; }
         public string DoctorName { get; set; }
@@ -19,7 +20,7 @@ namespace DTOsLayer
         public int PatientID { get; set; }
 
 
-        public AppointmentItemDTO(int appointmentID, string fullName, string doctorName,
+        public ad_AppointmentItemDTO(int appointmentID, string fullName, string doctorName,
             string appointmentStatus, string field, DateTime date, TimeSpan time,
             int doctorID, int patientID)
         {

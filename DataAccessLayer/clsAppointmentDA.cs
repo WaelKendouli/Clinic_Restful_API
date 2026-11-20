@@ -81,9 +81,9 @@ namespace DataAccessLayer
             }
         }
 
-        public static async Task<List<AppointmentItemDTO>> GetListAppointementByPatientIDAsync(int patientID)
+        public static async Task<List<us_AppointmentItemDTO>> GetListAppointementByPatientIDAsync(int patientID)
         {
-            List<AppointmentItemDTO> appointments = new List<AppointmentItemDTO>();
+            List<us_AppointmentItemDTO> appointments = new List<us_AppointmentItemDTO>();
             using (SqlConnection conx = new SqlConnection(clsConnection.ConnectionString))
             using (SqlCommand cmd = new SqlCommand("SP_GetListAppointementByPatientID", conx))
             {
@@ -97,17 +97,34 @@ namespace DataAccessLayer
                     {
                         while (await reader.ReadAsync())
                         {
-                            AppointmentItemDTO appointment = new AppointmentItemDTO(
+                            // Handle potential NULLs safely
+                            string doctorName = reader.IsDBNull(reader.GetOrdinal("FullName"))
+                                ? "" : reader.GetString(reader.GetOrdinal("FullName"));
+
+                            string status = reader.IsDBNull(reader.GetOrdinal("StatusName"))
+                                ? "" : reader.GetString(reader.GetOrdinal("StatusName"));
+
+                            string service = reader.IsDBNull(reader.GetOrdinal("ServiceName"))
+                                ? "" : reader.GetString(reader.GetOrdinal("ServiceName"));
+
+                            TimeSpan startTime = reader.IsDBNull(reader.GetOrdinal("StartTime"))
+                                ? TimeSpan.Zero : reader.GetTimeSpan(reader.GetOrdinal("StartTime"));
+
+                            TimeSpan endTime = reader.IsDBNull(reader.GetOrdinal("EndTime"))
+                                ? TimeSpan.Zero : reader.GetTimeSpan(reader.GetOrdinal("EndTime"));
+
+                            // Construct the DTO using the mapped values
+                            us_AppointmentItemDTO appointment = new us_AppointmentItemDTO(
                                 reader.GetInt32(reader.GetOrdinal("AppointmentID")),
-                                reader.GetString(reader.GetOrdinal("FullName")),
-                                reader.GetString(reader.GetOrdinal("DoctorName")),
-                                reader.GetString(reader.GetOrdinal("AppointmentStatus")),
-                                reader.GetString(reader.GetOrdinal("Field")),
                                 reader.GetDateTime(reader.GetOrdinal("Date")),
-                                reader.GetTimeSpan(reader.GetOrdinal("Time")),
-                                reader.GetInt32(reader.GetOrdinal("DoctorID")),
-                                reader.GetInt32(reader.GetOrdinal("PatientID"))
+                                doctorName,
+                                status,
+                                service,
+                                reader.GetInt32(reader.GetOrdinal("PatientID")),
+                                startTime,
+                                endTime
                             );
+
                             appointments.Add(appointment);
                         }
                     }

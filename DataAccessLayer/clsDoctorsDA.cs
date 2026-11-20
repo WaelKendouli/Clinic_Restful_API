@@ -287,9 +287,9 @@ namespace DataAccessLayer
             return DicSpecializations;
         }
 
-        public static async Task<List<AppointmentItemDTO>> GetListOfAppointmentsByDoctorIDAsync(int doctorID)
+        public static async Task<List<ad_AppointmentItemDTO>> GetListOfAppointmentsByDoctorIDAsync(int doctorID)
         {
-            List<AppointmentItemDTO> appointments = new List<AppointmentItemDTO>();
+            List<ad_AppointmentItemDTO> appointments = new List<ad_AppointmentItemDTO>();
             using (SqlConnection conx = new SqlConnection(clsConnection.ConnectionString))
             using (SqlCommand cmd = new SqlCommand("SP_GetListOfAppointmentsByDoctorID", conx))
             {
@@ -303,7 +303,7 @@ namespace DataAccessLayer
                     {
                         while (await reader.ReadAsync())
                         {
-                            AppointmentItemDTO appointment = new AppointmentItemDTO(
+                            ad_AppointmentItemDTO appointment = new ad_AppointmentItemDTO(
                                 reader.GetInt32(reader.GetOrdinal("AppointmentID")),
                                 reader.GetString(reader.GetOrdinal("FullName")),
                                 reader.GetString(reader.GetOrdinal("DoctorName")),

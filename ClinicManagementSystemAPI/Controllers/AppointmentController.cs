@@ -27,9 +27,9 @@ namespace ClinicManagementSystemAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetAppointmentList(int patientID)
+        public async Task<IActionResult> GetAppointmentListPerPatient(int patientID)
         {
-            List<AppointmentItemDTO> appointments = await clsAppointment.GetListAppointementByPatientIDAsync(patientID);
+            List<us_AppointmentItemDTO> appointments = await clsAppointment.GetListAppointementByPatientIDAsync(patientID);
             if (appointments != null)
             {
                 return Ok(appointments);
