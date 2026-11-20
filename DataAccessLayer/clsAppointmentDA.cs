@@ -11,27 +11,26 @@ namespace DataAccessLayer
 {
     public class clsAppointmentDA
     {
-        public static async Task<int> AddNewAppointmentAsync(DateTime date, TimeSpan time, int doctorID, int patientID, int appointmentStatusID)
+        public static async Task<int> AddNewAppointmentAsync(AppointmentDTO appointment)
         {
             using (var connection = new SqlConnection(clsConnection.ConnectionString))
             using (var command = new SqlCommand("SP_AddNewAppointment", connection))
             {
                 command.CommandType = CommandType.StoredProcedure;
 
-                // Add Date parameter
-                command.Parameters.AddWithValue("@Date", date);
+                // Map properties from AppointmentDTO
+                command.Parameters.AddWithValue("@Date", appointment.Date);
+                command.Parameters.AddWithValue("@DoctorID", appointment.DoctorID);
+                command.Parameters.AddWithValue("@PatientID", appointment.PatientID);
+                command.Parameters.AddWithValue("@AppointmentStatusID", appointment.AppointmentStatusID);
 
-                // Add Time parameter
-                command.Parameters.AddWithValue("@Time", time);
+                // Map new properties from your updated constructor
+                command.Parameters.AddWithValue("@IssueDate", appointment.IssueDate);
+                command.Parameters.AddWithValue("@StartTime", appointment.StartTime);
+                command.Parameters.AddWithValue("@EndTime", appointment.EndTime);
 
-                // Add DoctorID parameter
-                command.Parameters.AddWithValue("@DoctorID", doctorID);
-
-                // Add PatientID parameter
-                command.Parameters.AddWithValue("@PatientID", patientID);
-
-                // Add AppointmentStatusID parameter
-                command.Parameters.AddWithValue("@AppointmentStatusID", appointmentStatusID);
+                // Map additional parameter required by the SP
+                command.Parameters.AddWithValue("@ServiceID", appointment.ServiceID);
 
                 // Output parameter for the new Appointment ID
                 var outputIdParam = new SqlParameter("@NewAppointmentID", SqlDbType.Int)
@@ -56,7 +55,6 @@ namespace DataAccessLayer
                 }
             }
         }
-
         public static async Task<bool> ChangeAppointmentStatusToCanceledAsync(int appointmentID)
         {
             using (var connection = new SqlConnection(clsConnection.ConnectionString))

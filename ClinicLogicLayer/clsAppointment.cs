@@ -36,10 +36,10 @@ namespace ClinicLogicLayer
             PatientID = patientID;
             AppointmentStatusID = appointmentStatusID;
         }
-        public  async Task<bool> AddNewAppointmentAsync(DateTime date, TimeSpan time, int doctorID, int patientID, int appointmentStatusID)
+        public static  async Task<bool> AddNewAppointmentAsync(AppointmentDTO appointment)
         {
-           this.AppointmentID =  await clsAppointmentDA.AddNewAppointmentAsync(date, time, doctorID, patientID, appointmentStatusID);
-            return this.AppointmentID > 0;
+           int AppointmentID =  await clsAppointmentDA.AddNewAppointmentAsync(appointment);
+            return AppointmentID > 0;
         }
 
         public static async Task<bool> ChangeAppointmentStatusToCanceledAsync(int appointmentID)

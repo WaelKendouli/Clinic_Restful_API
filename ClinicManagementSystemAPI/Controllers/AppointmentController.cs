@@ -15,9 +15,8 @@ namespace ClinicManagementSystemAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> PostAppointment([FromBody] AppointmentDTO DTO)
         {
-            clsAppointment NewAppointment = new clsAppointment(DTO.Date, DTO.Time, DTO.DoctorID, DTO.PatientID, DTO.AppointmentStatusID);
 
-            if (!await NewAppointment.AddNewAppointmentAsync(DTO.Date, DTO.Time, DTO.DoctorID, DTO.PatientID, DTO.AppointmentStatusID))
+            if (!await clsAppointment.AddNewAppointmentAsync(DTO))
             {
                 return BadRequest("New Appointment was not added");
             }
@@ -56,7 +55,7 @@ namespace ClinicManagementSystemAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> UpdateAppointment(int appointmentID, [FromBody] AppointmentDTO DTO)
         {
-            if (!await clsAppointment.UpdateAppointmentAsync(appointmentID, DTO.Date, DTO.Time, DTO.DoctorID, DTO.PatientID, DTO.AppointmentStatusID))
+            if (!await clsAppointment.UpdateAppointmentAsync(appointmentID, DTO.IssueDate, DTO.StartTime, DTO.DoctorID, DTO.PatientID, DTO.AppointmentStatusID))
             {
                 return BadRequest("Failed to update the appointment.");
             }
