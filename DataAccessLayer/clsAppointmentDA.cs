@@ -55,6 +55,60 @@ namespace DataAccessLayer
                 }
             }
         }
+        public static async Task<AppointmentDTO> FindAppointmentByIDAsync(int appointmentID)
+        {
+            using (SqlConnection conx = new SqlConnection(clsConnection.ConnectionString))
+            using (SqlCommand cmd = new SqlCommand("FindAppointmentByID", conx))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@AppointmentID", appointmentID);
+
+                try
+                {
+                    await conx.OpenAsync();
+                    using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            // Safely handle nullable fields
+                            var IssueDateOrdinal = reader.GetOrdinal("IssueDate");
+                            DateTime issueDate = reader.IsDBNull(IssueDateOrdinal) ? DateTime.MinValue : reader.GetDateTime(IssueDateOrdinal);
+
+                            var StartTimeOrdinal = reader.GetOrdinal("StartTime");
+                            TimeSpan startTime = reader.IsDBNull(StartTimeOrdinal) ? TimeSpan.Zero : reader.GetTimeSpan(StartTimeOrdinal);
+
+                            var EndTimeOrdinal = reader.GetOrdinal("EndTime");
+                            TimeSpan endTime = reader.IsDBNull(EndTimeOrdinal) ? TimeSpan.Zero : reader.GetTimeSpan(EndTimeOrdinal);
+
+                            var ServiceIDOrdinal = reader.GetOrdinal("ServiceID");
+                            int serviceID = reader.IsDBNull(ServiceIDOrdinal) ? 0 : reader.GetInt32(ServiceIDOrdinal);
+
+                            // Construct the DTO
+                            return new AppointmentDTO(
+                                reader.GetInt32(reader.GetOrdinal("AppointmentID")),
+                                reader.GetDateTime(reader.GetOrdinal("Date")),
+                                issueDate,
+                                startTime,
+                                endTime,
+                                reader.GetInt32(reader.GetOrdinal("DoctorID")),
+                                reader.GetInt32(reader.GetOrdinal("PatientID")),
+                                reader.GetInt32(reader.GetOrdinal("AppointmentStatusID")),
+                                serviceID
+                            );
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Handle exception (log it, etc.)
+                    return null;
+                }
+            }
+
+            // Return null if no appointment was found with the given ID
+            return null;
+        }
+
         public static async Task<bool> ChangeAppointmentStatusToCanceledAsync(int appointmentID)
         {
             using (var connection = new SqlConnection(clsConnection.ConnectionString))

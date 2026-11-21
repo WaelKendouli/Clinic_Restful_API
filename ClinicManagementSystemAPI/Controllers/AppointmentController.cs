@@ -43,6 +43,12 @@ namespace ClinicManagementSystemAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> CancelAppointment(int appointmentID)
         {
+            AppointmentDTO Appointment = await clsAppointment.FindAppointmentByIDAsync(appointmentID);
+            if (Appointment.IssueDate > DateTime.Today)
+            {
+                return BadRequest("Failed to cancel the appointment , appointments can be cancel only within 24 hours of thier ");
+            }
+
             if (!await clsAppointment.ChangeAppointmentStatusToCanceledAsync(appointmentID))
             {
                 return BadRequest("Failed to cancel the appointment.");

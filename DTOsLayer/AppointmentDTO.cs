@@ -51,6 +51,7 @@ namespace DTOsLayer
             PatientID = patientID;
             AppointmentStatusID = appointmentStatusID;
             this.ServiceID = serivceID;
+            this.Serivce = Service;
         }
 
     }
