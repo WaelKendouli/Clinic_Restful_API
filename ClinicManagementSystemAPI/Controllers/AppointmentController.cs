@@ -67,5 +67,20 @@ namespace ClinicManagementSystemAPI.Controllers
             }
             return Ok("Appointment updated successfully.");
         }
+
+        [HttpGet("GetCancelledAppointmentList/{patientID}", Name = "GetCancelledAppointmentList")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetCancelledAppointmentsListPerPatient(int patientID)
+        {
+            List<us_AppointmentItemDTO> CancelledAppointments = await clsAppointment.GetListOfCancelledAppointmentsAsync(patientID);
+            if (CancelledAppointments != null)
+            {
+                return Ok(CancelledAppointments);
+            }
+            return NotFound("No appointments found for the specified patient.");
+        }
+
     }
 }

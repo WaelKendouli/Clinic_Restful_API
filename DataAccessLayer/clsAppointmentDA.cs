@@ -109,6 +109,64 @@ namespace DataAccessLayer
             return null;
         }
 
+        public static async Task<List<us_AppointmentItemDTO>> GetListOfCancelledAppointmentsAsync(int patientID)
+        {
+            List<us_AppointmentItemDTO> cancelledAppointments = new List<us_AppointmentItemDTO>();
+            using (SqlConnection conx = new SqlConnection(clsConnection.ConnectionString))
+            using (SqlCommand cmd = new SqlCommand("SP_GetListOFCancelledAppointments", conx))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@PatientID", patientID);
+
+                try
+                {
+                    await conx.OpenAsync();
+                    using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            // Handle potential NULLs safely
+                            string doctorName = reader.IsDBNull(reader.GetOrdinal("FullName"))
+                                ? "" : reader.GetString(reader.GetOrdinal("FullName"));
+
+                            string status = reader.IsDBNull(reader.GetOrdinal("StatusName"))
+                                ? "" : reader.GetString(reader.GetOrdinal("StatusName"));
+
+                            string service = reader.IsDBNull(reader.GetOrdinal("ServiceName"))
+                                ? "" : reader.GetString(reader.GetOrdinal("ServiceName"));
+
+                            TimeSpan startTime = reader.IsDBNull(reader.GetOrdinal("StartTime"))
+                                ? TimeSpan.Zero : reader.GetTimeSpan(reader.GetOrdinal("StartTime"));
+
+                            TimeSpan endTime = reader.IsDBNull(reader.GetOrdinal("EndTime"))
+                                ? TimeSpan.Zero : reader.GetTimeSpan(reader.GetOrdinal("EndTime"));
+
+                            // Construct the DTO
+                            us_AppointmentItemDTO appointment = new us_AppointmentItemDTO(
+                                reader.GetInt32(reader.GetOrdinal("AppointmentID")),
+                                reader.GetDateTime(reader.GetOrdinal("Date")),
+                                doctorName,
+                                status,
+                                service,
+                                reader.GetInt32(reader.GetOrdinal("PatientID")),
+                                startTime,
+                                endTime
+                            );
+
+                            cancelledAppointments.Add(appointment);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Handle exception (log it, etc.)
+                    return null;
+                }
+            }
+            return cancelledAppointments;
+        }
+
+
         public static async Task<bool> ChangeAppointmentStatusToCanceledAsync(int appointmentID)
         {
             using (var connection = new SqlConnection(clsConnection.ConnectionString))

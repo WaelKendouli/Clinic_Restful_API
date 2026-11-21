@@ -59,6 +59,9 @@ namespace ClinicLogicLayer
         {
             return await clsAppointmentDA.FindAppointmentByIDAsync(appointmentID);
         }
-
+        public static async Task<List<us_AppointmentItemDTO>> GetListOfCancelledAppointmentsAsync(int patientID)
+        {
+            return await clsAppointmentDA.GetListOfCancelledAppointmentsAsync(patientID);
+        }
     }
 }
