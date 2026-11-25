@@ -17,6 +17,7 @@ namespace DTOsLayer
         public string Status { get; set; }   // was "Stauts"
         public string Service { get; set; }
         public int PatientID { get; set; }
+        public string PatientFullName { get; set; }
         public TimeSpan Start { get; set; }
         public TimeSpan End { get; set; }
 
@@ -42,6 +43,27 @@ namespace DTOsLayer
             PatientID = patientID;
             Start = start;
             End = end;
+        }
+
+        public us_AppointmentItemDTO(
+            int appointmentID,
+            DateTime date,
+            string doctorName,
+            string status,
+            string service,
+            int patientID,
+            TimeSpan start,
+            TimeSpan end,
+            string PatientName)
+        {
+            AppointmentID = appointmentID;
+            Date = date;
+            Status = status;
+            Service = service;
+            PatientID = patientID;
+            Start = start;
+            End = end;
+            this.PatientFullName = PatientName;
         }
 
     }

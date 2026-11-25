@@ -287,9 +287,9 @@ namespace DataAccessLayer
             return DicSpecializations;
         }
 
-        public static async Task<List<ad_AppointmentItemDTO>> GetListOfAppointmentsByDoctorIDAsync(int doctorID)
+        public static async Task<List<us_AppointmentItemDTO>> GetListOfAppointmentsByDoctorIDAsync(int doctorID)
         {
-            List<ad_AppointmentItemDTO> appointments = new List<ad_AppointmentItemDTO>();
+            List<us_AppointmentItemDTO> appointments = new List<us_AppointmentItemDTO>();
             using (SqlConnection conx = new SqlConnection(clsConnection.ConnectionString))
             using (SqlCommand cmd = new SqlCommand("SP_GetListOfAppointmentsByDoctorID", conx))
             {
@@ -303,17 +303,35 @@ namespace DataAccessLayer
                     {
                         while (await reader.ReadAsync())
                         {
-                            ad_AppointmentItemDTO appointment = new ad_AppointmentItemDTO(
+                            // Safely handle nullable fields
+                            string status = reader.IsDBNull(reader.GetOrdinal("StatusName"))
+                                ? "" : reader.GetString(reader.GetOrdinal("StatusName"));
+
+                            string service = reader.IsDBNull(reader.GetOrdinal("ServiceName"))
+                                ? "" : reader.GetString(reader.GetOrdinal("ServiceName"));
+
+                            string patientName = reader.IsDBNull(reader.GetOrdinal("Patient"))
+                                ? "" : reader.GetString(reader.GetOrdinal("Patient"));
+
+                            TimeSpan startTime = reader.IsDBNull(reader.GetOrdinal("StartTime"))
+                                ? TimeSpan.Zero : reader.GetTimeSpan(reader.GetOrdinal("StartTime"));
+
+                            TimeSpan endTime = reader.IsDBNull(reader.GetOrdinal("EndTime"))
+                                ? TimeSpan.Zero : reader.GetTimeSpan(reader.GetOrdinal("EndTime"));
+
+                            // Construct the DTO using the new constructor
+                            us_AppointmentItemDTO appointment = new us_AppointmentItemDTO(
                                 reader.GetInt32(reader.GetOrdinal("AppointmentID")),
-                                reader.GetString(reader.GetOrdinal("FullName")),
-                                reader.GetString(reader.GetOrdinal("DoctorName")),
-                                reader.GetString(reader.GetOrdinal("AppointmentStatus")),
-                                reader.GetString(reader.GetOrdinal("Field")),
                                 reader.GetDateTime(reader.GetOrdinal("Date")),
-                                reader.GetTimeSpan(reader.GetOrdinal("Time")) ,
-                                reader.GetInt32(reader.GetOrdinal("DoctorID")),
-                                reader.GetInt32(reader.GetOrdinal("PatientID"))
+                                "", // DoctorName is not returned by this SP (we already know the doctor)
+                                status,
+                                service,
+                                reader.GetInt32(reader.GetOrdinal("PatientID")),
+                                startTime,
+                                endTime,
+                                patientName
                             );
+
                             appointments.Add(appointment);
                         }
                     }
@@ -321,7 +339,7 @@ namespace DataAccessLayer
                 catch (Exception ex)
                 {
                     // Handle exception (log it, etc.)
-                    return null;
+                    return new List<us_AppointmentItemDTO>();
                 }
             }
             return appointments;
