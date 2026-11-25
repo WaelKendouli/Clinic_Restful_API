@@ -1,4 +1,5 @@
-﻿using DTOsLayer;
+﻿using DataAccessLayer.Helpers;
+using DTOsLayer;
 using DTOsLayer.Interfaces;
 using Microsoft.Data;
 using Microsoft.Data.SqlClient;
@@ -116,6 +117,57 @@ namespace DataAccessLayer
             return null;
         }
 
+        public static async Task<DoctorDTO> GetDoctorDataByUserIDAsync(UserDTO user)
+        {
+            using (SqlConnection conx = new SqlConnection(clsConnection.ConnectionString))
+            using (SqlCommand cmd = new SqlCommand("SP_GetDoctorInformationsAfterAuthentication", conx))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@UserID", user.UserID);
+
+                try
+                {
+                    await conx.OpenAsync();
+                    using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            // Handle nullable Doctor-specific fields safely
+                            string photoURL = reader.IsDBNull(reader.GetOrdinal("PhotoURL")) ? "" : reader.GetString(reader.GetOrdinal("PhotoURL"));
+                            string bio = reader.IsDBNull(reader.GetOrdinal("Bio")) ? "" : reader.GetString(reader.GetOrdinal("Bio"));
+                            string specialization = reader.IsDBNull(reader.GetOrdinal("Specialization")) ? "" : reader.GetString(reader.GetOrdinal("Specialization"));
+
+                            // Construct the DoctorDTO using existing UserDTO data + new Doctor data
+                            return new DoctorDTO(
+                                reader.GetInt32(reader.GetOrdinal("DoctorID")),
+                                photoURL,
+                                reader.GetInt32(reader.GetOrdinal("SpecializationID")),
+                                bio,
+                                specialization,
+                                // Base User properties (passed from the authenticated user)
+                                user.UserID,
+                                user.Username,
+                                user.HashedPassword,
+                                user.FirstName,
+                                user.LastName,
+                                user.Email,
+                                user.Phone,
+                                user.Gender,
+                                user.DateOfBirth,
+                                user.Role
+                            );
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Handle exception (log it, etc.)
+                    return null;
+                }
+            }
+            return null;
+        }
+
         public static async Task<AdminDTO> GetAdminDataByUserIDAsync(UserDTO user)
         {
             using (SqlConnection conx = new SqlConnection(clsConnection.ConnectionString))
@@ -160,16 +212,16 @@ namespace DataAccessLayer
 
         public async static Task<IF_User> GetDataBasedOnRoles(UserDTO DTO)
         {
-            switch (DTO.Role)
+            try
             {
-                case "Patient":
-                    return await GetPatientDataByUserIDAsync(DTO);
-                case "Doctor":
-                    break;
-                case "Admin":
-                    return await GetAdminDataByUserIDAsync(DTO);
+                clsRolesSelectingHandler handler = new clsRolesSelectingHandler();
+                return await handler.SelectRole(DTO);
             }
-            return null;
+            catch (Exception e)
+            {
+                return null;
+            }
+
         }
 
         public static bool SecondaryAuthentication(string phone, string email)
