@@ -32,18 +32,7 @@ namespace ClinicLogicLayer
         }
 
 
-        public  async Task<bool> AddNewMedicalRecordAsync(MedicalRecordDTO record)
-        {
-            this.MedicalRecordID = await clsMedicalRecordDA.AddNewMedicalRecordAsync(
-                record.Description,
-                record.Diagnosis,
-                record.AdditionalNotes,
-                record.DoctorID,
-                record.PatientID,
-                record.AppointmentID
-            );
-            return this.MedicalRecordID > 0;
-        }
+        
 
     }
 }

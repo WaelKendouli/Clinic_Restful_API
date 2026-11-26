@@ -10,6 +10,7 @@ namespace DataAccessLayer
 {
     public class clsMedicalRecordDA
     {
+
         public static async Task<int> AddNewMedicalRecordAsync(string description, string diagnosis, string additionalNotes, int doctorID, int patientID, int appointmentID)
         {
             using (var connection = new SqlConnection(clsConnection.ConnectionString))

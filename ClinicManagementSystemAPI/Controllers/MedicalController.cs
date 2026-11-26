@@ -13,14 +13,7 @@ namespace ClinicManagementSystemAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> AddMedicalRecord([FromBody] MedicalRecordDTO record)
         {
-            clsMedicalRecord mr = new clsMedicalRecord(record.Description , record.Diagnosis  , record.AdditionalNotes, record.DoctorID, record.PatientID, record.AppointmentID);
-
-            bool isAdded = await mr.AddNewMedicalRecordAsync(record);
-            if (isAdded == false)
-            {
-                return BadRequest(new { Success = false, Message = "Failed to add medical record." });
-            }
-            return Ok(new { mr , Success = isAdded });
+            return Ok();
         }
     }
 }

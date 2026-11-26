@@ -10,18 +10,24 @@ namespace DTOsLayer
     {
         public int MedicalRecordID { get; set; }
         public string Description { get; set; }
-        public string Diagnosis { get; set; }
         public string AdditionalNotes { get; set; }
         public int DoctorID { get; set; }
         public int PatientID { get; set; }
         public int AppointmentID { get; set; }
 
-        public MedicalRecordDTO(int medicalRecordID, string description, string diagnosis,
-        string additionalNotes, int doctorID, int patientID, int appointmentID)
+        
+        public MedicalRecordDTO()
+        {
+            Description = string.Empty;
+            AdditionalNotes = string.Empty;
+        }
+
+       
+        public MedicalRecordDTO(int medicalRecordID, string description, string additionalNotes,
+                                int doctorID, int patientID, int appointmentID)
         {
             MedicalRecordID = medicalRecordID;
             Description = description;
-            Diagnosis = diagnosis;
             AdditionalNotes = additionalNotes;
             DoctorID = doctorID;
             PatientID = patientID;

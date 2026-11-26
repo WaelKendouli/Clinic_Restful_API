@@ -44,12 +44,14 @@
     <Compile Include="AdminDTO.cs" />
     <Compile Include="AppointmentDTO.cs" />
     <Compile Include="ad_AppointmentItemDTO.cs" />
+    <Compile Include="DiagnosisDTO.cs" />
     <Compile Include="DoctorScheduelDTO.cs" />
     <Compile Include="DoctorDTO.cs" />
     <Compile Include="EmailSenderDTO.cs" />
     <Compile Include="Interfaces\IF_User.cs" />
     <Compile Include="LoginDTO.cs" />
     <Compile Include="LoginTestClassDTO.cs" />
+    <Compile Include="MedicalRecordAggregateDTO.cs" />
     <Compile Include="MedicalRecordDTO.cs" />
     <Compile Include="MedicationDTO.cs" />
     <Compile Include="PatientDTO.cs" />
@@ -58,6 +60,7 @@
     <Compile Include="ServiceDTO.cs" />
     <Compile Include="UserDTO.cs" />
     <Compile Include="us_AppointmentItemDTO.cs" />
+    <Compile Include="VitalsDTO.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
