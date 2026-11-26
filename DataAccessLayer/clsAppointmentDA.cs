@@ -289,5 +289,33 @@ namespace DataAccessLayer
                 }
             }
         }
+
+        public static async Task<bool> ChangeAppointmentStatusAsync(int newAppointmentStatusID, int appointmentID)
+        {
+            using (var connection = new SqlConnection(clsConnection.ConnectionString))
+            using (var command = new SqlCommand("SP_ChangeAppointmentSatus", connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+
+                // Add parameters
+                command.Parameters.AddWithValue("@NewAppointmentStatusID", newAppointmentStatusID);
+                command.Parameters.AddWithValue("@AppointmentID", appointmentID);
+
+                try
+                {
+                    await connection.OpenAsync();
+                    int rowsAffected = await command.ExecuteNonQueryAsync();
+
+                    // Return true if the appointment was found and updated
+                    return rowsAffected > 0;
+                }
+                catch (Exception ex)
+                {
+                    // Handle exception (log it, etc.)
+                    return false;
+                }
+            }
+        }
+
     }
 }

@@ -82,5 +82,19 @@ namespace ClinicManagementSystemAPI.Controllers
             return NotFound("No appointments found for the specified patient.");
         }
 
+        [HttpPut("InProgressAppointment/{appointmentID}", Name = "InProgressAppointment")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> InProgressAppointment(int appointmentID)
+        {
+            if (await clsAppointment.ChangeAppointmentStatusAsync((int)clsAppointment.eSatuses.InProgress, appointmentID))
+            {
+                return Ok("Session now is in progress");                
+            }
+            return BadRequest("Changing status failed");
+        }
+
+
     }
 }

@@ -11,6 +11,10 @@ namespace ClinicLogicLayer
 {
     public class clsAppointment
     {
+      public enum eSatuses {  Scheduled = 1 , Confirmed = 2 , CheckedIn = 3 , InProgress = 4 ,
+            Completed = 5 , Cancelled =6 ,NoShow = 7 , Rescheduled = 8}
+
+        public static eSatuses status { get; set; } = new eSatuses();
         public int AppointmentID { get; set; }
         public DateTime Date { get; set; }
         public TimeSpan Time { get; set; }
@@ -63,5 +67,11 @@ namespace ClinicLogicLayer
         {
             return await clsAppointmentDA.GetListOfCancelledAppointmentsAsync(patientID);
         }
+
+        public static async Task<bool> ChangeAppointmentStatusAsync(int newAppointmentStatusID, int appointmentID)
+        {
+            return await clsAppointmentDA.ChangeAppointmentStatusAsync(newAppointmentStatusID, appointmentID);
+        }
+
     }
 }
