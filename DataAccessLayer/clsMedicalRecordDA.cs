@@ -1,68 +1,74 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DTOsLayer;
 using Microsoft.Data.SqlClient;
+using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Data;
 
 namespace DataAccessLayer
 {
     public class clsMedicalRecordDA
     {
-
-        public static async Task<int> AddNewMedicalRecordAsync(string description, string diagnosis, string additionalNotes, int doctorID, int patientID, int appointmentID)
+        public static async Task<int> AddNewMedicalRecordAsync(MedicalRecordAggregateDTO aggregate)
         {
             using (var connection = new SqlConnection(clsConnection.ConnectionString))
             using (var command = new SqlCommand("SP_AddNewMedicalRecord", connection))
             {
                 command.CommandType = CommandType.StoredProcedure;
 
-                // Add Description parameter
-                command.Parameters.AddWithValue("@Description", description);
+                // --- 1. Core Medical Record Data ---
+                command.Parameters.AddWithValue("@Description", aggregate.MedicalRecord.Description);
 
-                // Add Diagnosis parameter
-                command.Parameters.AddWithValue("@Diagnosis", diagnosis);
-
-                // Handle AdditionalNotes (nullable)
-                if (string.IsNullOrEmpty(additionalNotes))
-                {
+                if (string.IsNullOrEmpty(aggregate.MedicalRecord.AdditionalNotes))
                     command.Parameters.AddWithValue("@AdditionalNotes", DBNull.Value);
-                }
                 else
-                {
-                    command.Parameters.AddWithValue("@AdditionalNotes", additionalNotes);
-                }
+                    command.Parameters.AddWithValue("@AdditionalNotes", aggregate.MedicalRecord.AdditionalNotes);
 
-                // Add DoctorID parameter
-                command.Parameters.AddWithValue("@DoctorID", doctorID);
+                command.Parameters.AddWithValue("@DoctorID", aggregate.MedicalRecord.DoctorID);
+                command.Parameters.AddWithValue("@PatientID", aggregate.MedicalRecord.PatientID);
+                command.Parameters.AddWithValue("@AppointmentID", aggregate.MedicalRecord.AppointmentID);
 
-                // Add PatientID parameter
-                command.Parameters.AddWithValue("@PatientID", patientID);
+                // --- 2. Vitals Data ---
+                command.Parameters.AddWithValue("@Height", aggregate.Vitals.Height);
+                command.Parameters.AddWithValue("@Weight", aggregate.Vitals.Weight);
 
-                // Add AppointmentID parameter
-                command.Parameters.AddWithValue("@AppointmentID", appointmentID);
+                if (string.IsNullOrEmpty(aggregate.Vitals.BloodPressure))
+                    command.Parameters.AddWithValue("@BloodPressure", DBNull.Value);
+                else
+                    command.Parameters.AddWithValue("@BloodPressure", aggregate.Vitals.BloodPressure);
 
-                // Output parameter for the new MedicalRecord ID
-                var outputIdParam = new SqlParameter("@NewMedicalRecordID", SqlDbType.Int)
-                {
-                    Direction = ParameterDirection.Output
-                };
-                command.Parameters.Add(outputIdParam);
+                command.Parameters.AddWithValue("@Temperature", aggregate.Vitals.Temperature);
+                command.Parameters.AddWithValue("@Pulse", aggregate.Vitals.Pulse);
+
+                // --- 3. Diagnosis Data ---
+                command.Parameters.AddWithValue("@Conclution", aggregate.Diagnosis.Conclution);
+                command.Parameters.AddWithValue("@ICD10Code", aggregate.Diagnosis.ICD10Code);
 
                 try
                 {
-                    // Execute the stored procedure asynchronously
                     await connection.OpenAsync();
-                    await command.ExecuteNonQueryAsync();
 
-                    // Return the newly generated MedicalRecord ID
-                    return (int)outputIdParam.Value;
+                    // The stored procedure uses SELECT SCOPE_IDENTITY(), so we use ExecuteScalarAsync
+                    object result = await command.ExecuteScalarAsync();
+
+                    if (result != null && result != DBNull.Value)
+                    {
+                        return Convert.ToInt32(result);
+                    }
+
+                    return -1; // Should not reach here if transaction succeeded
+                }
+                catch (SqlException ex)
+                {
+                    
+                    return -1;
                 }
                 catch (Exception ex)
                 {
-                    // Handle exception (log it, etc.)
-                    return -1; // Return -1 to indicate failure
+                    
+                    return -1;
                 }
             }
         }

@@ -31,8 +31,13 @@ namespace ClinicLogicLayer
             AppointmentID = appointmentID;
         }
 
+        public static async Task<bool> AddNewMedicalRecordAsync(MedicalRecordAggregateDTO aggregate)
+        {
+            int NewID = await clsMedicalRecordDA.AddNewMedicalRecordAsync(aggregate);
+            return NewID > 0;
+        }
 
-        
+
 
     }
 }

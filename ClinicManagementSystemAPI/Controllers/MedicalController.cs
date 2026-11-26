@@ -11,9 +11,13 @@ namespace ClinicManagementSystemAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> AddMedicalRecord([FromBody] MedicalRecordDTO record)
+        public async Task<IActionResult> AddMedicalRecord([FromBody] MedicalRecordAggregateDTO record)
         {
-            return Ok();
+            if (await clsMedicalRecord.AddNewMedicalRecordAsync(record))
+            {
+                return Ok("Medical record was saved successfully");
+            }
+            return BadRequest("Medical record saving failed");
         }
     }
 }
