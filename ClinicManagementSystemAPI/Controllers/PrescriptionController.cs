@@ -12,7 +12,7 @@ namespace ClinicManagementSystemAPI.Controllers
         {
             var prescription = new clsPrescription(
                 medicalRecordID: prescriptionDTO.MedicalRecordID,
-                startDate: prescriptionDTO.StartDate,
+                startDate: prescriptionDTO.IssueDate,
                 endDate: prescriptionDTO.EndDate
             );
 

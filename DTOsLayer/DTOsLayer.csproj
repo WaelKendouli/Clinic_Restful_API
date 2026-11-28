@@ -44,6 +44,7 @@
     <Compile Include="AdminDTO.cs" />
     <Compile Include="AppointmentDTO.cs" />
     <Compile Include="ad_AppointmentItemDTO.cs" />
+    <Compile Include="DescribedMedicationDTO.cs" />
     <Compile Include="DiagnosisDTO.cs" />
     <Compile Include="DoctorScheduelDTO.cs" />
     <Compile Include="DoctorDTO.cs" />

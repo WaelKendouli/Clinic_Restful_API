@@ -11,23 +11,18 @@ namespace DTOsLayer
         public int PrescriptionID { get; set; }
         public int MedicalRecordID { get; set; }
 
-        public DateTime StartDate { get; set; }
+        public DateTime IssueDate { get; set; }
+        public List<DescribedMedicationDTO> liMedications { get; set; } = new List<DescribedMedicationDTO>(); 
+        
 
-        public DateTime EndDate { get; set; }
-
-        public PrescriptionDTO(int prescriptionID, int medicalRecordID, DateTime startDate, DateTime endDate)
+        public PrescriptionDTO(int prescriptionID, int medicalRecordID, DateTime issueDate , List<DescribedMedicationDTO> Medications)
         {
             PrescriptionID = prescriptionID;
             MedicalRecordID = medicalRecordID;
-            StartDate = startDate;
-            EndDate = endDate;
+            IssueDate = issueDate;
+            liMedications = Medications;
         }
-        public PrescriptionDTO(int medicalRecordID, DateTime startDate, DateTime endDate)
-        {
-            MedicalRecordID = medicalRecordID;
-            StartDate = startDate;
-            EndDate = endDate;
-        }
+       
         public PrescriptionDTO()
         {
         }
