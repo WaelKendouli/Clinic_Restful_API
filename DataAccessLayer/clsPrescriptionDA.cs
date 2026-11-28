@@ -4,56 +4,68 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DTOsLayer;
 using Microsoft.Data.SqlClient;
 namespace DataAccessLayer
 {
     public class clsPrescriptionDA
     {
-        public static async Task<int> AddNewPrescriptionAsync(int medicalRecordID, DateTime startDate, DateTime endDate)
+        public static async Task<int> AddNewPrescriptionAsync(PrescriptionDTO dto)
         {
-            using (var connection = new SqlConnection(clsConnection.ConnectionString))
-            using (var command = new SqlCommand("SP_AddNewPrescription", connection))
+
+            try
             {
-                command.CommandType = CommandType.StoredProcedure;
+                var meds = new DataTable();
+                meds.Columns.Add("MedicationID", typeof(int));
+                meds.Columns.Add("Dosage", typeof(string));
+                meds.Columns.Add("Frequncy", typeof(string));
+                meds.Columns.Add("StartDate", typeof(DateTime));
+                meds.Columns.Add("EndDate", typeof(DateTime));
 
-                // Add MedicalRecordID parameter
-                command.Parameters.AddWithValue("@MedicalRecordID", medicalRecordID);
-
-                // Add StartDate parameter
-                command.Parameters.AddWithValue("@StartDate", startDate);
-
-                // Handle EndDate (nullable)
-                if (endDate == DateTime.MinValue)
+                foreach (var m in dto.liMedications)
                 {
-                    command.Parameters.AddWithValue("@EndDate", DBNull.Value);
+                    meds.Rows.Add(
+                        m.MedicationID,
+                        m.Dosage,
+                        m.Frequncy,
+                        m.StartDate,
+                        m.EndDate
+                    );
                 }
-                else
+                using (SqlConnection conx = new SqlConnection(clsConnection.ConnectionString))
                 {
-                    command.Parameters.AddWithValue("@EndDate", endDate);
-                }
+                    using (SqlCommand cmd = new SqlCommand("SP_AddNewPrescription", conx))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@MedicalRecordID", SqlDbType.Int).Value = dto.MedicalRecordID;
+                        cmd.Parameters.Add("@IssueDate", SqlDbType.Date).Value = dto.IssueDate;
 
-                // Output parameter for the new Prescription ID
-                var outputIdParam = new SqlParameter("@NewPrescriptionID", SqlDbType.Int)
-                {
-                    Direction = ParameterDirection.Output
-                };
-                command.Parameters.Add(outputIdParam);
+                        var medParam = cmd.Parameters.AddWithValue("@Medications", meds);
+                        medParam.SqlDbType = SqlDbType.Structured;
+                        medParam.TypeName = "dbo.DescribedMedicationType";
 
-                try
-                {
-                    // Execute the stored procedure asynchronously
-                    await connection.OpenAsync();
-                    await command.ExecuteNonQueryAsync();
+                      await  conx.OpenAsync();
+                        var result = await cmd.ExecuteScalarAsync();
 
-                    // Return the newly generated Prescription ID
-                    return (int)outputIdParam.Value;
-                }
-                catch (Exception ex)
-                {
-                    // Handle exception (log it, etc.)
-                    return -1; // Return -1 to indicate failure
+                        if (result != null && result != DBNull.Value)
+                        {
+                            return Convert.ToInt32(result);
+                        }
+
+                        return -1;
+                    }
+
                 }
             }
+            catch (Exception e)
+            {
+                return -1;
+            }
+            
+
         }
+
+       
+
     }
 }

@@ -10,20 +10,15 @@ namespace ClinicManagementSystemAPI.Controllers
         [HttpPost("AddNewPrescription" , Name ="AddNewPrescription")]
         public async Task<IActionResult> AddNewPrescription([FromBody] PrescriptionDTO prescriptionDTO)
         {
-            var prescription = new clsPrescription(
-                medicalRecordID: prescriptionDTO.MedicalRecordID,
-                startDate: prescriptionDTO.IssueDate,
-                endDate: prescriptionDTO.EndDate
-            );
-
-            var result = await prescription.AddNewPrescriptionAsync();
+            
+            var result = await clsPrescription.AddNewPrescriptionAsync(prescriptionDTO);
 
             if (result)
             {
-                return Ok(new { prescription, Success = true });
+                return Ok("Prescription was added succesfully");
             }
 
-            return BadRequest(new { Success = false });
+            return BadRequest("Prescription was adding failed");
         }
     }
 }

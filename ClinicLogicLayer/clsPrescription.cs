@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccessLayer;
+using DTOsLayer;
 namespace ClinicLogicLayer
 {
     public class clsPrescription
@@ -22,10 +23,10 @@ namespace ClinicLogicLayer
             EndDate = endDate;
         }
 
-        public async Task<bool> AddNewPrescriptionAsync()
+        public static async Task<bool> AddNewPrescriptionAsync(PrescriptionDTO DTO)
         {
-            this.PrescriptionID = await clsPrescriptionDA.AddNewPrescriptionAsync(this.MedicalRecordID, this.StartDate, this.EndDate);
-            return this.PrescriptionID > 0;
+            int PrescriptionID = await clsPrescriptionDA.AddNewPrescriptionAsync(DTO);
+            return PrescriptionID > 0;
         }
     }
 }
